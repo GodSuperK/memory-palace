@@ -18,3 +18,17 @@ class Earth:
             return cls.__instance
 ```
 
+```python
+class Earth:
+    
+	def __init__(self, *args, **kwargs):
+		pass
+
+	def __new__(cls, *args, **kwargs):
+		if not getattr(cls, 'INS', None):
+			cls.INS = super().__new__(cls, *args, **kwargs)
+			return cls.INS
+		else:
+			return cls.INS
+```
+
