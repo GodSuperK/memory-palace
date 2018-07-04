@@ -1,4 +1,4 @@
-# Cent OS 7 下通过Nginx+uwsgi部署Django应用
+# Cent OS 7 下通过Nginx+uWSGI部署Django应用
 
 ### 1. Install python3.7.0
 
@@ -158,9 +158,167 @@ to check. And this is our stack:
 the web client <-> the web server <-> the socket <-> uWSGI <-> Python
 ```
 
+#### Using Unix sockets instead of ports
 
+So far we have used a TCP port socket, because it’s simpler, but in fact it’s better to use Unix sockets than ports - there’s less overhead.
 
+Edit `mysite_nginx.conf`, changing it to match:
 
+```
+server unix:///path/to/your/mysite/mysite.sock; # for a file socket
+# server 127.0.0.1:8001; # for a web port socket (we'll use this first)
+```
+
+and restart nginx.
+
+Run uWSGI again:
+
+```
+uwsgi --socket mysite.sock --wsgi-file test.py
+```
+
+#### If that doesn’t work
+
+Check your nginx error log(/var/log/nginx/error.log). If you see something like:
+
+```
+connect() to unix:///path/to/your/mysite/mysite.sock failed (13: Permission
+denied)
+```
+
+then probably you need to manage the permissions on the socket so that nginx is allowed to use it.
+
+Try:
+
+```
+uwsgi --socket mysite.sock --wsgi-file test.py --chmod-socket=666 # (very permissive)
+```
+
+You may also have to add your user to nginx’s group (which is probably www-data), or vice-versa, so that nginx can read and write to your socket properly.
+
+It’s worth keeping the output of the nginx log running in a terminal window so you can easily refer to it while troubleshooting.
+
+ #### Running the Django application with uwsgi and nginx
+
+Let’s run our Django application:
+
+```
+uwsgi --socket mysite.sock --module mysite.wsgi --chmod-socket=664
+```
+
+Now uWSGI and nginx should be serving up not just a “Hello World” module, but your Django project.
+
+#### Configuring uWSGI to run with a .ini file
+
+We can put the same options that we used with uWSGI into a file, and then ask uWSGI to run with that file. It makes it easier to manage configurations.
+
+Create a file called ``mysite_uwsgi.ini``:
+
+```
+# mysite_uwsgi.ini file
+[uwsgi]
+
+# Django-related settings
+# the base directory (full path)
+chdir           = /path/to/your/project
+# Django's wsgi file
+module          = project.wsgi
+# the virtualenv (full path)
+home            = /path/to/virtualenv
+
+# process-related settings
+# master
+master          = true
+# maximum number of worker processes
+processes       = 10
+# the socket (use the full path to be safe
+socket          = /path/to/your/project/mysite.sock
+# ... with appropriate permissions - may be needed
+# chmod-socket    = 664
+# clear environment on exit
+vacuum          = true
+```
+
+And run uswgi using this file:
+
+```
+uwsgi --ini mysite_uwsgi.ini # the --ini option is used to specify a file
+```
+
+Once again, test that the Django site works as expected.
+
+#### Install uWSGI system-wide
+
+So far, uWSGI is only installed in our virtualenv; we'll need it installed system-wide for deployment purposes.
+
+Deactivate your virtualenv:
+
+```
+deactivate
+```
+
+and install uWSGI system-wide:
+
+```
+sudo pip install uwsgi
+
+# Or install LTS (long term support).
+pip install https://projects.unbit.it/downloads/uwsgi-lts.tar.gz
+```
+
+The uWSGI wiki describes several [installation procedures](https://projects.unbit.it/uwsgi/wiki/Install). Before installing uWSGI system-wide, it’s worth considering which version to choose and the most apppropriate way of installing it.
+
+Check again that you can still run uWSGI just like you did before:
+
+```
+uwsgi --ini mysite_uwsgi.ini # the --ini option is used to specify a file
+```
+
+#### Emperor mode
+
+uWSGI can run in ‘emperor’ mode. In this mode it keeps an eye on a directory of uWSGI config files, and will spawn instances (‘vassals’) for each one it finds.
+
+Whenever a config file is amended, the emperor will automatically restart the vassal.
+
+```
+# create a directory for the vassals
+sudo mkdir /etc/uwsgi
+sudo mkdir /etc/uwsgi/vassals
+# symlink from the default config directory to your config file
+sudo ln -s /path/to/your/mysite/mysite_uwsgi.ini /etc/uwsgi/vassals/
+# run the emperor
+uwsgi --emperor /etc/uwsgi/vassals --uid www-data --gid www-data
+```
+
+You may need to run uWSGI with sudo:
+
+```
+sudo uwsgi --emperor /etc/uwsgi/vassals --uid www-data --gid www-data
+```
+
+The options mean:
+
+- `emperor`: where to look for vassals (config files)
+- `uid`: the user id of the process once it’s started
+- `gid`: the group id of the process once it’s started
+
+Check the site; it should be running.
+
+#### Make uWSGI startup when the system boots
+
+The last step is to make it all happen automatically at system startup time.
+
+For many systems, the easiest (if not the best) way to do this is to use the `rc.local` file.
+
+Edit `/etc/rc.local` and add:
+
+```
+/usr/local/bin/uwsgi --emperor /etc/uwsgi/vassals --uid www-data --gid www-data --daemonize /var/log/uwsgi-emperor.log
+```
+
+before the line “exit 0”.
+
+And that should be it!
 
 
 
@@ -190,3 +348,4 @@ the web client <-> the web server <-> the socket <-> uWSGI <-> Python
 ### See Also
 
 1. [Setting up Django and your web server with uWSGI and nginx](https://uwsgi.readthedocs.io/en/latest/tutorials/Django_and_nginx.html)
+
