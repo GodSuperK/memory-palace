@@ -34,6 +34,8 @@ virtualenv uwsgi-tutorial
 cd uwsgi-tutorial
 # 2. start virtualenv
 source bin/activate
+# 3. exit virtualenv
+deactivate
 ```
 
 ### 3. Install Nginx
