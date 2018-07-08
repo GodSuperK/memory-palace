@@ -115,10 +115,10 @@ URLconf以供进一步处理
 ```python
 # 去除视图中的硬编码 URL
 from django.urls import reverse
-	def vote(request, question_id):
-		...
-		return HttpResponseRedirect(
-            reverse('polls:results', args=(question_id,)))
+def vote(request, question_id):
+	...
+	return HttpResponseRedirect(
+        reverse('polls:results', args=(question_id,)))
 ```
 ## Models (models.py)
 
