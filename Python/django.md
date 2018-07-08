@@ -122,6 +122,173 @@ def vote(request, question_id):
 ```
 ## Models (models.py)
 
+#### 数据库配置
+
+详见 setting.py
+
+#### 创建模型
+
+```python
+# polls/models.py
+"""
+每个模型被表示为 django.db.models.Model 类的子类。
+每个模型有一些类变量，它们都表示模型里的一个数据库字段
+"""
+from django.db import models
+
+class Question(models.Model):
+    question_text = models.CharField(max_length=200)
+    pub_date = models.DateTimeField('date published')
+    
+    def __str__(self):
+        return self.question_text
+    
+ class Choice(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice_text = models.CharField(max_length=200)
+    votes = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return self.choice_text
+ 
+```
+
+#### 激活模型
+
+```shell
+# 1. install app 详见 setting.py
+# 2. 检测你对模型文件的修改, 并且把修改的部分储存为一次 迁移
+python3 manage.py makemigrations polls
+# 3. 在数据库里创建新定义的模型的数据表
+python3 manage.py migrate
+```
+
+#### 改变模型
+
+1. 编辑 ```models.py``` 文件，改变模型。
+2. 运行 ```python manage.py makemigrations``` 为模型的改变生成迁移文件。
+3. 运行 ```python manage.py migrate``` 来应用数据库迁移。
+
+#### PS
+
+1.  输出的内容和你使用的数据库有关，上面的输出示例使用的是 PostgreSQL
+2.  数据库的表名是由应用名(polls)和模型名的小写形式( question 和 choice)连接而来
+3.  主键(IDs)会被自动创建
+4.  默认的，Django 会在外键字段名后追加字符串 "_id" 
+5.  外键关系由 FOREIGN KEY 生成
+
+
+
+#### Database API
+
+##### C(reating objects)
+
+```python
+from django.utils import timezone
+q = Question(question_text="What's new?", pub_date=timezone.now())
+q.save()
+```
+
+##### R(eading objects)
+
+```python
+"""
+1. filter(**kwargs)
+Returns a new QuerySet containing objects that match the given lookup parameters.
+
+2. exclude(**kwargs)
+Returns a new QuerySet containing objects that do not match the given 
+lookup parameters.
+
+3. 
+"""
+
+# Retrieveing all objects
+# Itreturns a QuerySet that contains all Question objects in the database.
+Question.objects.all()
+# See doc string 1
+Question.objects.filter(id=1)
+Question.objects.filter(question_text__startswith='What')
+# Limiting QuerySets
+# Negative indexing (i.e. Question.objects.all()[-1]) is not supported.
+# this returns the first 5 objects(LIMIT 5)
+Question.objects.all()[:5]
+# this returns sixth through tenth objects (OFFSET 5 LIMIT 5)
+Question.objects.all()[5:10]
+# Retrieving a single object 
+# If there are no results that match the query, 
+# that will raise a DoesNotExist exception
+# Django provides a pk lookup shortcut, which stands for "primary key
+Question.objects.get(pk=1)
+
+"""Retriving related objects
+
+When you define a relationship in a model (i.e., a ForeignKey, OneToOneField, 
+or ManyToManyField), instances of that model will have a convenient API 
+to access the related object(s).
+"""
+
+# one-to-many relationships: Forward
+# If a model has a ForeignKey, instances of that model will have 
+# access to the related (foreign) object via a simple attribute of the model.
+c = Choice.objects.get(id=2)
+# Returns the related Question object.
+c.question
+
+# If a ForeignKey field has null=True set (i.e., it allows NULL values), 
+# you can assign None to remove the relation. 
+c = Choice.objects.get(id=1)
+c.question = None
+c.save()
+
+# one-to-many relationships: Backward
+q = Question.objects.get(id=1)
+# Returns all Choice objects related to Question 
+q.choice_set.all()
+# q.choice_set is a Manager that returns QuerySets
+q.choice_set.filter(question_text__contains='What')
+q.choice_set.count()
+"""Additional methods to handle related objects
+
+1. add(obj1, obj2, ...): Adds the specified model objects to the related object set.
+2. create(**kwargs): Creates a new object, saves it and puts it in the related 
+   object set. Returns the newly created object.
+3. remove(obj1, obj2, ...): Removes the specified model objects from the 
+   related object set.
+4. clear(): Removes all objects from the related object set.
+5. set(objs): Replace the set of related objects.
+   To assign the members of a related set, use the set() method with an iterable 
+   of object instances.
+"""
+
+# TODO(later Many-to-many relationships)
+# TODO(later One-to-one relationships)
+# TODO(later fields lookup)
+```
+
+##### U(pdating objects)
+
+```python
+# first, get object in the database
+q = Question.objects.get(pk=1)
+# Change values by changing the attributes, then calling save().
+q.question_text = "What's up?"
+q.save()
+```
+
+##### D(eleting objects)
+
+```python
+# delete one object
+q = Question.objects.get(pk=2)
+q.delete()
+
+# delete more objects
+# Every QuerySet has a delete() method, which deletes all members of that QuerySet.
+Question.objects.all().delete()
+Question.objects.filter(question_text__startswith='What').delete()
+```
+
 
 
 ## Views (views.py)
