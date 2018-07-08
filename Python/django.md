@@ -61,17 +61,23 @@ urlpatterns = [
 """path()
 
 route: route 是一个匹配 URL 的准则（类似正则表达式）
-view: 当 Django 找到了一个匹配的准则，就会调用这个特定的视图函数，并传入一个 			  HttpRequest 对象作为第一个参数，被“捕获”的参数以关键字参数的形式传入
+view: 当 Django 找到了一个匹配的准则，就会调用这个特定的视图函数，并传入一个	  	   	     HttpRequest 对象作为第一个参数，被“捕获”的参数以关键字参数的形式传入
 kwargs: 任意个关键字参数可以作为一个字典传递给目标视图函数
 name: 为你的 URL 取名能使你在 Django 的任意地方唯一地引用它，尤其是在模板中
 """
 
 """
-当某人请求你网站的某一页面时——比如说， "/polls/34/" ，Django 将会载入 mysite.urls 模块，因为这在配置项 ROOT_URLCONF 中设置了。然后 Django 寻找名为 urlpatterns 变量并且按序匹配正则表达式。在找到匹配项 'polls/'，它切掉了匹配的文本（"polls/"），将剩余文本——"34/"，发送至 'polls.urls' URLconf 做进一步处理。在这里剩余文本匹配了 '<int:question_id>/'，使得我们 Django 以如下形式调用 detail():
+当某人请求你网站的某一页面时——比如说， "/polls/34/" ，Django 将会载入 mysite.urls
+模块，因为这在配置项 ROOT_URLCONF 中设置了。然后 Django 寻找名为 urlpatterns 变量
+且按序匹配正则表达式。在找到匹配项 'polls/'，它切掉了匹配的文本（"polls/"），将剩余
+本——"34/"，发送至 'polls.urls' URLconf 做进一步处理。在这里剩余文本匹配了
+'<int:question_id>/'，使得我们 Django 以如下形式调用 detail():
 
 detail(request=<HttpRequest object>, question_id=34)
 
-question_id=34 由 <int:question_id> 匹配生成。使用尖括号“捕获”这部分 URL，且以关键字参数的形式发送给视图函数。上述字符串的 :question_id> 部分定义了将被用于区分匹配模式的变量名，而 int: 则是一个转换器决定了应该以什么变量类型匹配这部分的 URL 路径。
+question_id=34 由 <int:question_id> 匹配生成。使用尖括号“捕获”这部分 URL，且以关
+字参数的形式发送给视图函数。上述字符串的 :question_id> 部分定义了将被用于区分匹配模式
+变量名，而 int: 则是一个转换器决定了应该以什么变量类型匹配这部分的 URL 路径。
 """
 ```
 
