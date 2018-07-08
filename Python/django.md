@@ -132,7 +132,49 @@ def vote(request, question_id):
 
 
 
-## static files
+## Manage static files
+
+#### 管理应用的静态文件
+
+```shell
+polls ## app root directory
+└── static
+    └── polls
+        ├── css    # store css files
+        ├── images # store images 
+        └── js     # store js files
+```
+
+Django 的 STATICFILES_FINDERS 设置包含了一系列的查找器，它们知道去哪里找到 static 文件。AppDirectoriesFinder 是默认查找器中的一个，它会在每个 INSTALLED_APPS 中指定的应用的子文件中寻找名称为 static 的特定文件夹，就像我们在 polls 中刚创建的那个一样。管理后台采用相同的目录结构管理它的静态文件
+
+
+
+#### 在模板中引用静态文件
+
+```html
+<!-- polls/templates/polls/index.html -->
+
+<!-- 在模板中引用静态文件 -->
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}" />
+```
+
+{% static %} 模板标签会生成静态文件的绝对路径
+
+
+
+#### 静态文件之间使用相对路径互相引用
+
+```css
+/** polls/static/polls/style.css 
+
+在css文件中引用图片文件
+*/
+
+body {
+	background: white url("images/background.gif") no-repeat;
+}
+```
 
 
 
