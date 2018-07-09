@@ -134,7 +134,10 @@ def vote(request, question_id):
 每个模型被表示为 django.db.models.Model 类的子类。
 每个模型有一些类变量，它们都表示模型里的一个数据库字段
 """
+import datetime
+
 from django.db import models
+from django.utils import timezone
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
@@ -142,6 +145,10 @@ class Question(models.Model):
     
     def __str__(self):
         return self.question_text
+    
+    def was_published_recently(self):
+        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+    
     
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
@@ -165,9 +172,9 @@ python3 manage.py migrate
 
 #### 改变模型
 
-1. 编辑 ```models.py``` 文件，改变模型。
-2. 运行 ```python manage.py makemigrations``` 为模型的改变生成迁移文件。
-3. 运行 ```python manage.py migrate``` 来应用数据库迁移。
+1. 编辑 `models.py` 文件，改变模型。
+2. 运行 `python manage.py makemigrations` 为模型的改变生成迁移文件。
+3. 运行 `python manage.py migrate` 来应用数据库迁移。
 
 #### PS
 
@@ -347,7 +354,104 @@ body {
 
 ## Django admin
 
+#### 注册模型
 
+```python
+# polls/admin.py
+
+from django.contrib import admin
+
+from .models import Question
+
+# 定义关联对象
+# admin.StackedInline 样式: 堆放表单,占据大量空间
+# admin.TabularInline 样式: 关联对象以一种表格式的方式展示，显得更加紧凑
+class ChoiceLine(admin.StackedInline):
+    # 指定模型
+    model = Choice
+    # 指定默认的添加数量(不可在表单中移除)
+    extra = 3
+    
+    
+class QuestionAdmin(admin.ModelAdmin):
+    # 按照列表中字段的顺序排列表单
+    # fields = ['pub_date', 'question_text']
+    # 将表单分为几个字段集, fieldsets 元组中的第一个元素是字段集的标题
+    fieldsets = [
+        (None, {'fields': ['question_text']}),
+        ('Date information', {'fields': ['pub_date']}),
+    ]
+    # 添加关联的对象(高效实现,可以一次添加多个对象)
+    inlines = [ChoiceInline]
+    # 自定义 change list 中显示的对象的属性(数据库中记录的字段)
+    list_display = ('question_text', 'pub_date', 'was_published_recently')
+    # add filter
+    list_filter = ['pub_date']
+    # add search box (后台使用 LIKE 来查询数据)
+    search_fields = ['question_text']
+    
+# 使用默认的表单用于展示模型
+# admin.site.register(Question)
+# 自定义表单的外观和工作方式
+admin.site.register(Question, QuestionAdmin)
+```
+
+##### 优化字段在change list 中的显示
+
+```python
+# polls/models.py
+
+class Question(models.Model):
+    #...
+    def was_published_recently(self):
+        ...
+    was_published_recently.admin_order_field = 'pub_date'
+    was_published_recently.boolean = True
+    was_published_recently.short_description = 'Published recently?'
+    
+```
+
+##### 自定义你的工程的模板
+
+```
+mysite
+├── manage.py
+├── mysite
+│   ├── init.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+└── templates
+    └── admin
+```
+
+将存放 Django 默认模板的目录（`django/contrib/admin/templates`）内的模板文件 
+
+`admin/base_site.html`复制到`mysite/templates/admin/`中
+
+```python
+# mysite/settings.py
+
+# 在TEMPLATES中添加DIRS选项
+# DIRS 是一个包含多个系统目录的文件列表，用于在载入 Django 模板时使用，是一个待搜索路径
+TEMPLATES = [
+    # ...
+    'DIRS': [os.path.join(BASE_DIR, 'templates')],
+    # ...
+]
+```
+
+```shell
+# 查看 Django源文件的位置
+python -c "import django; print(django.__path__)"
+```
+
+```html
+<!-- 修改大标题(默认为Django administration) -->
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">Polls Administration</a></h1>
+{% endblock %}
+```
 
 
 
