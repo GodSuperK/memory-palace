@@ -35,9 +35,130 @@ python3 manage.py test app_name
 
 
 
-## settings.py
-1. TIME_ZONE = 'Asia/Shanghai'
-2. USE_TZ = False
+## Settings(.py)
+```python
+# setting.py
+
+import os
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = '*3-sm4cr9f6yvfpe-9^#2#5a!0-^+e7%5$m0_53-$omsogyxd5'
+
+# SECURITY WARNING: don't run with debug turned on in production!
+# 调试模式, 请求出错后,显示错误信息
+DEBUG = True
+
+ALLOWED_HOSTS = []
+
+
+# Application definition
+
+# 这里包括了会在你项目中启用的所有 Django 应用 (可以移除不需要的应用)
+INSTALLED_APPS = [
+    'django.contrib.admin',         # 管理员站点
+    'django.contrib.auth',          # 认证授权系统
+    'django.contrib.contenttypes',  # 内容类型框架
+    'django.contrib.sessions',      # 会话框架
+    'django.contrib.messages',      # 消息框架
+    'django.contrib.staticfiles',   # 管理静态文件的框架
+]
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+# 指定根 URLconfs 表现为: 客户端请求的 url address 首先在 mysite.urls 中匹配 
+ROOT_URLCONF = 'mysite.urls'
+
+# 模板配置
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        # DIRS 是一个包含多个系统目录的文件列表，用于在载入 Django 模板时使用，是一个待搜索路径
+        # 在这里指定为 project_path/templates 是为了方便管理项目模板 
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = 'mysite.wsgi.application'
+
+# Database
+# https://docs.djangoproject.com/en/2.0/ref/settings/#databases
+
+# 数据库配置 (默认使用 SQLite 数据库)
+# 如果你想使用其他数据库，你需要安装合适的 database bindings 
+# 然后改变设置文件中 DATABASES 'default' 项目中的一些键值
+DATABASES = {
+    'default': {
+        # 'ENGINE' 指定后端所使用的数据库
+        # 可选值有 'django.db.backends.mysql', 'django.db.backends.postgresql',
+        # 'django.db.backends.sqlite3', 'django.db.backends.oracle' 等等
+        'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME' 指定数据库的名称
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # 除 sqlite 以外的数据库需要指定以下的额外配置
+        # 'USER' 指定登陆数据库的用户名称
+        # 'USER': 'root',
+        # 'PASSWORD' 指定登陆密码
+        # 'PASSWORD': 'toor',
+        # 'HOST' and 'PORT' 指定数据库服务器的 address,  mysql默认为 '127.0.0.1' '3306' 
+    }
+}
+
+
+# Password validation
+# https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+# 设置项目语言为中文,表现为 admin 应用显示中文
+LANGUAGE_CODE = 'zh-hans'
+
+# 设置时区为上海
+TIME_ZONE = 'Asia/Shanghai'
+# 不使用默认的 UTC 时区
+USE_TZ = False
+
+USE_I18N = True
+USE_L10N = True
+
+STATIC_URL = '/static/'
+
+```
 
 
 
@@ -120,7 +241,7 @@ def vote(request, question_id):
     return HttpResponseRedirect(
         reverse('polls:results', args=(question_id,)))
 ```
-## Models (models.py)
+## Models(.py)
 
 #### 数据库配置
 
@@ -298,11 +419,11 @@ Question.objects.filter(question_text__startswith='What').delete()
 
 
 
-## Views (views.py)
+## Views(.py)
 
 
 
-## templates
+## Templates
 
 
 
@@ -352,7 +473,7 @@ body {
 
 
 
-## Django admin
+## Django admin(.py)
 
 #### 注册模型
 
