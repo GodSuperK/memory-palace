@@ -421,6 +421,187 @@ Question.objects.filter(question_text__startswith='What').delete()
 
 ## Views(.py)
 
+> Django 要求每个视图必须返回一个包含被请求页面内容的 HttpResponse 对象, 或者抛出一个异常，
+>
+> 比如 Http404 .
+
+##### 最简单的视图
+
+```python
+# polls/views.py
+
+from django.http import HttpReponse
+
+def index(request):
+    return HttpResponse("Hello, world. You're at the polls index.")
+```
+
+##### 有参数的视图
+
+```python
+def detail(request, question_id):
+    return HttpResponse("You're looking at question %s." % question_id)
+
+def results(request, question_id):
+    response = "You're looking at the results of question %s."
+    return HttpResponse(response % question_id)
+
+def vote(request, question_id):
+    return HttpResponse("You're voting on question %s." % question_id)
+```
+
+##### 在视图中使用模板
+
+```python
+# polls/views.py
+
+from django.http import HttpResponse
+from django.template import loader
+
+from .models import Question
+
+def index(reqeust):
+    "载入模板，填充上下文，再返回由它生成的 HttpResponse 对象"
+    latest_question_list = Question.objects.order_by('-pub_date')[:5]
+    template = loader.get_template('polls/index.html')
+    # 上下文是一个字典，它将模板内的变量映射为 Python 对象
+    context = {
+        'latest_question_list': latest_question_list,
+    }
+    return HttpResponse(template.render(context, request))
+```
+
+##### 使用快捷函数 render()
+
+```python
+"""render(request, template_name, context=None)
+
+It returns an HttpResponse object of the given template rendered with 
+the given context.
+"""
+
+from django.shortcuts import render
+from .models import Question
+
+def index(request):
+    latest_question_list = Question.objects.order_by('-pub_date')[:5]
+    context = {'latest_question_list': latest_question_list}
+    return render(request, 'polls/index.html', context)
+```
+
+
+
+##### 抛出 404 错误
+
+```python
+# polls/views.py
+
+from django.http import Http404
+from django.shortcuts import render
+
+from .models import Question
+
+def detail(request, question_id):
+    try:
+        question = Question.objects.get(pk=question_id)
+    except Question.DoesNotExist:
+        raise Http404("Question does not exist")
+    return render(request, 'polls/detail.html', {'question': question})
+```
+
+##### 使用快捷函数 get_object_or_404()
+
+```python
+"""get_object_or_404(klass, *args, **kwargs)
+
+klass: A Model class, a Manager, or a QuerySet instance from which to 
+       get the object.
+**kwargs: Lookup parameters, which should be in the format accepted 
+          by get() and filter().
+Also see:          
+get_list_or_404() works same as get_object_or_404()
+"""
+
+from django.shortcuts import get_object_or_404, render
+
+from .models import Question
+
+def detail(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    return render(request, 'polls/detail.html', {'question': question})
+```
+
+##### 返回 HttpResponseRedirect 对象 的视图
+
+```python
+""" HttpResponseRedirect
+
+1. 只接收一个参数：用户将要被重定向的 URL
+2. 在成功处理POST数据之后，你应该总是返回一个HttpResponseRedirect
+"""
+
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
+def vote(request, question_id):
+    #...
+    return HttpResponseRedirect(reverse('polls:index', args=(question_id, )))
+```
+
+
+
+##### request
+
+- `request.POST` 是一个类字典对象，让你可以通过关键字的名字获取提交的数据
+-  `request.GET` 存储 get 请求的参数
+
+
+
+##### 使用通用视图 (TODO later)
+
+```python
+"""IndexView 显示一个对象列表
+
+Method Flowchart:
+	1. dispatch()
+	2. http_method_not_allowed()
+	3. get_template_names()
+	4. get_queryset()
+	5. get_context_object_name()
+	6. get_context_data()
+	7. get()
+	8. render_to_response()
+
+
+DetailView 显示一个特定类型对象的详细信息页面
+"""
+# polls/views.py
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
+from django.views import generic
+
+from .models import Choice, Question
+
+class IndexView(generic.ListView):
+    #  默认模板: <app name>/<model name>_list.html
+    template_name = 'polls/index.html' # 使用指定模板
+    # 指定上下文变量的名字 question_list
+    context_object_name = 'latest_question_list'
+    
+    def get_queryset(self):
+        """Get the list of items for this view."""
+        return Question.objects.order_by('-pub_date')[:5]
+    
+class DetailView(generic.DetailView):
+    model = Question
+    template_name = 'polls/detail.html'
+    
+class ResultsView(generic.DetailView):
+    model = Question
+    template_name = 'polls/results.html'
+```
+
 
 
 ## Templates
