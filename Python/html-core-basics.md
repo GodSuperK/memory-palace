@@ -103,6 +103,83 @@
  <a href="new_file.html">jump to my new_file.html</a>
 ```
 
+### Table
+
+```html
+<table border="1">
+      <thead><th>Number</th><th>Color</th><th>Country</th></thead>
+      <tbody>
+        <tr>
+          <td>250</td><td>Red</td><td>China</td>
+        </tr>
+        <tr>
+          <td>250</td><td>Red</td><td>China</td>
+        </tr>
+        <tr>
+          <td>250</td><td>Red</td><td>China</td>
+        </tr>
+      </tbody>
+    </table>
+```
+
+### Forms
+
+```html
+<form class="" action="index.html" method="post">
+      <p><input type="text" name="" value=""></p>
+      <p><input type="password" name="" value=""></p>
+      <p><input type="email" name="" value=""></p>
+      <p><input type="color" name="" value=""></p>
+      <p><input type="submit" name="" value="Click me"></p>
+    </form>
+```
+
+### Label
+
+```html
+<form class="" action="https://www.baidu.com" method="post">
+      <p><label for=""> Username:
+        <input type="text" name="" value="" placeholder="username" required>
+      </label>
+     </p>
+
+     <p>
+       <label for="username2">Username2:</label>
+       <input id="username2" type="text" name="Username2" value="" placeholder="username2" required>
+     </p>
+
+     <p><input type="submit" name="" value="Submit"> </p>
+    </form>
+```
+
+### Selections
+
+```html
+<form class="" action="index.html" method="get">
+      <p>
+        <input id="football" type="radio" name="sports" value="football">
+        <label for="football">Football</label>
+
+        <input id="pingpang" type="radio" name="sports" value="pingpang">
+        <label for="pingpang">PingPang</label>
+
+        <input id="basketball" type="radio" name="sports" value="basketball">
+        <label for="basketball">Basketball</label>
+      </p>
+
+      <p>
+        <select class="" name="city">
+          <option value="Shanghai">上海</option>
+          <option value="bj">北京</option>
+          <option value="nj">南京</option>
+        </select>
+      </p>
+
+      <textarea name="feedback" rows="8" cols="80"></textarea>
+      <p><input type="submit" name="" value="Submit"> </p>
+    </form>
+```
+
 
 
 
