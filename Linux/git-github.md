@@ -24,6 +24,7 @@ git add file # 将文件添加到 staging area
 git commit # 将文件提交到 Repository
 git diff commit_id1 commit_id2
 git diff # 找到 staging area 和 working directory 的文件不同
+git reset HEAD <file> # 取消暂存区的提交
 git branch # 显示所有分支, 以及当前所在的分支
 git branch new_name # 创建 new_name 分支
 git checkout name # 切换到 name 分支 
