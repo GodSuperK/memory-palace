@@ -23,4 +23,4 @@
 
 5. TL-WN722N 
 
-   > Taobao KeyWord (Kali Linux免驱动USB无线网卡3070L无线网卡tplink tl-wn722n网卡)
+   > Taobao KeyWord (tplink tl-wn722n网卡)
