@@ -85,11 +85,31 @@ selector {
 
 ```css
 selector {
-    text-decoration: line-through;
+    text-decoration: line-through; /* overline; cursive;*/
+    text-align: center;
 }
 ```
 
+### Font
 
+```css
+selector {
+    font-family: 'Arial'; /* monospace; */
+    /*1em = 16px(default font size) 2em = 32px*/
+    font-size: 10px;
+    font-style: italic;
+    font-weight: bold;
+}
+```
+
+#### 自定义字体
+
+1. [Google Fonts](http://www.googlefonts.cn/)
+2. [CSS Font Stack](https://www.cssfontstack.com/)
+
+### 配色方案生成器
+
+[The super fast color schemes generator!](https://coolors.co/)
 
 ### Selectors
 
@@ -147,5 +167,26 @@ div ul li {
 .divFirst_class a[href="https://cn.bing.com"] {
     color: purple;
 }
+
+/* 伪类 */
+a:link {color: #FF0000}		/* 未访问的链接 */
+a:visited {color: #00FF00}	/* 已访问的链接 */
+a:hover {color: #FF00FF}	/* 鼠标移动到链接上 */
+a:active {color: #0000FF}	/* 选定的链接 */
+
+/*Specificity cover css style
+tag < class < id
+
+*/
+
 ```
 
+
+
+### Box Model
+
+
+
+### Tools
+
+1. Google Browser Inspect
