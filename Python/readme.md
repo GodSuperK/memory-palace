@@ -8,4 +8,5 @@
 6. [Hyper text markup language(HTML) basic](html-core-basics.md)
 7. [Cascading Style Sheets(CSS) Basic](css-core-basics.md)
 8. [Mysql Basics](mysql-basics.md)
+9. [Redis-Basics](redis-basics.md)
 
