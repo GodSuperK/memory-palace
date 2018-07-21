@@ -73,7 +73,8 @@ setnx(self, name, vlaue)
 mset(self, *args, **kwargs)
 
 根据映射设置键/值。 可以直接传入一个字典或 传递多个关键字参数
-Sets key/values based on a mapping. Mapping can be supplied as a single dictionary argument or as kwargs.
+Sets key/values based on a mapping. Mapping can be supplied as a 
+single dictionary argument or as kwargs.
 
 """
 ```
@@ -121,7 +122,11 @@ end，结束位置（字节）
 
 setrange(self, name, offset, value)
 
-Overwrite bytes in the value of ``name`` starting at ``offset`` with ``value``. If ``offset`` plus the length of ``value`` exceeds the length of the original value, the new value will be larger than before. If ``offset`` exceeds the length of the original value, null bytes will be used to pad between the end of the previous value and the start of what's being injected.
+Overwrite bytes in the value of ``name`` starting at ``offset`` with ``value``. 
+If ``offset`` plus the length of ``value`` exceeds the length of the original value, 
+the new value will be larger than before. If ``offset`` exceeds the length of the 
+original value, null bytes will be used to pad between the end of the previous value 
+and the start of what's being injected.
     
 Returns the length of the new string.
 
@@ -150,7 +155,8 @@ Return the number of bytes stored in the value of ``name``
 
 incr(self, name, amount=1)
 
-Increments the value of ``key`` by ``amount``.  If no key exists, the value will be initialized as ``amount``
+Increments the value of ``key`` by ``amount``.  If no key exists, 
+the value will be initialized as ``amount``
 
 参数：
 name,Redis的name
@@ -201,7 +207,8 @@ amount,自增数（浮点型）
 """自减 name对应的值，当name不存在时，则创建name＝amount，否则，则自减。
 decr(self, name, amount=1)
 
-Decrements the value of ``key`` by ``amount``.  If no key exists, the value will be initialized as 0 - ``amount``
+Decrements the value of ``key`` by ``amount``.  If no key exists, 
+the value will be initialized as 0 - ``amount``
 
 参数：
 name,Redis的name
@@ -216,7 +223,9 @@ amount,自减数（整数)
 
 append(self, key, value)
 
-Appends the string ``value`` to the value at ``key``. If ``key`` doesn't already exist, create it with a value of ``value``. Returns the new length of the value at ``key``.
+Appends the string ``value`` to the value at ``key``. 
+If ``key`` doesn't already exist, create it with a value of ``value``. 
+Returns the new length of the value at ``key``.
 
 将字符串``value``追加到``key``的值。 如果``key``不存在，则使用值``value``创建它。 返回``key``的值的新长度。
 """
