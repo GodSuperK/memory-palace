@@ -105,7 +105,8 @@ Sets the value at key ``name`` to ``value`` and returns the old value at key ``n
 """获取子序列（根据字节获取，非字符）
 getrange(self, key, start, end)
 
-Returns the substring of the string value stored at ``key``, determined by the offsets ``start`` and ``end`` (both are inclusive)
+Returns the substring of the string value stored at ``key``, 
+determined by the offsets ``start`` and ``end`` (both are inclusive)
 
 参数：
 name，Redis 的 name
