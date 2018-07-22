@@ -40,7 +40,7 @@ print(r.get('gender'))
 
 ## Redis 基本命令
 
-
+### String
 
 ### 1. redis.Redis.set()
 
@@ -230,5 +230,202 @@ Returns the new length of the value at ``key``.
 
 将字符串``value``追加到``key``的值。 如果``key``不存在，则使用值``value``创建它。 返回``key``的值的新长度。
 """
+```
+
+### Hash
+
+### 1. redis.Redis.hset()
+
+```python
+"""单个增加--修改(单个取出)--key不存在就添加，key 存在就修改 key 对应的 value
+hset(self, name, key, value)
+
+Set ``key`` to ``value`` within hash ``name``
+Returns 1 if HSET created a new field, otherwise 0
+
+hsetnx(name, key, value),当name对应的hash中不存在当前key时则创建（相当于只能添加）
+"""
+```
+
+### 2. redis.Redis.hmset()
+
+```python
+"""批量增加（取出）
+hmset(self, name, mapping)
+
+Set key to value within hash ``name`` for each corresponding 
+key and value from the ``mapping`` dict.
+
+"""
+r.hmset("hash", {"k2": "v2", "k3": "v3"})
+```
+
+
+
+
+
+### 3. redis.Redis.hget()
+
+```python
+"""在name对应的hash中获取根据key获取value
+hget(self, name, key)
+"""
+r.hget("hash", "k1")
+```
+
+### 4. redis.Redis.hmget()
+
+```python
+"""在name对应的hash中获取多个key的值
+hmget(self, name, keys, *args)
+
+keys: 可以接收一个 list of keys, 也可以接收一个 key
+"""
+
+r.hmget("hash", "k1")
+r.hmget("hash", "k1", "k2", "k3")
+r.hmget("hash", ["k1", "k2", "k3"])
+```
+
+### 5. redis.Redis.hgetall()
+
+```python
+"""取出所有的键值对
+hgetall(self, name)
+
+获取name对应hash的所有键值
+"""
+r.hgetall("hash")
+```
+
+### 6. redis.Redis.hlen()
+
+```python
+"""返回 key 的个数, 相当于计算 hash 的长度
+hlen(self, name)
+"""
+r.hlen("hash")
+```
+
+### 7. redis.Redis.hkeys()
+
+```python
+"""得到所有的keys（类似字典的取所有keys）
+hkeys(self, name)
+"""
+r.hkeys("hash")
+```
+
+### 8. redis.Redis.hvals()
+
+```python
+"""得到所有的value（类似字典的取所有value）
+
+hvals(self, name)
+"""
+r.hvals("hash")
+```
+
+### 9. redis.Redis.hexists()
+
+```python
+"""判断成员是否存在（类似字典的in）
+
+hexists(self, name, key)
+return True if exists else False
+"""
+
+r.hexists("hash", "k1")
+```
+
+### 10. redis.Redis.hdel()
+
+```python
+"""删除键值对
+hdel(self, name, *keys)
+
+Delete ``keys`` from hash ``name``
+"""
+r.hdel("hash", "k1", "k2", "k3")
+r.hdel("hash", *["k1", "k2", "k3"])
+```
+
+### 11. redis.Redis.hincrby()
+
+```python
+"""自增自减整数
+hincrby(self, name, key, amount=1)
+
+自增(减, amount=-1)name对应的hash中的指定key的值，不存在则创建key=amount
+
+参数：
+name，redis中的name
+key， hash对应的key
+amount，自增数（整数）
+"""
+
+r.hincrby('hash', "k1", amount=1)
+r.hincrby('hash', "k2", amount=-1)
+```
+
+### 12. redis.Redis.hincrbyfloat()
+
+```python
+"""自增自减浮点数
+hincrbyfloat(name, key, amount=1.0)
+
+同 hincrby, 只是 amount 是浮点类型
+"""
+```
+
+### 13. redis.Redis.hscan()
+
+```python
+"""在哈希中递增返回键/值切片。 还返回指示扫描位置的光标。
+
+hscan(self, name, cursor=0, match=None, count=None)
+增量式迭代获取，对于数据大的数据非常有用，hscan可以实现分片的获取数据，并非一次性将数据全部获取完，从而防止内存被撑爆
+参数：
+name，redis的name
+cursor，游标（基于游标分批取获取数据）
+match，匹配指定key，默认None 表示所有的key
+count，每次分片最少获取个数，默认None表示采用Redis的默认分片个数
+如：
+第一次：cursor1, data1 = r.hscan('xx', cursor=0, match=None, count=None)
+第二次：cursor2, data1 = r.hscan('xx', cursor=cursor1, match=None, count=None)
+...
+直到返回值cursor的值为0时，表示数据已经通过分片获取完毕
+
+Incrementally return key/value slices in a hash. Also return a cursor indicating the scan position. 
+
+``match`` allows for filtering the keys by pattern 
+``count`` allows for hint the minimum number of returns
+"""
+
+# 分片获取所有数据
+datas = []
+cursor = 0
+while True:
+	cursor, data = r.hscan("hash", cursor=cursor)
+    datas.append(data)
+    if not cursor:
+        break
+```
+
+### 14. redis.Redis.hscan_iter()
+
+```python
+"""使用HSCAN命令创建一个迭代器，以便客户端不需要记住光标位置
+
+hscan_iter(self, name, match=None, count=None)
+利用yield封装hscan创建生成器，实现分批去redis中获取数据
+
+参数：
+match，匹配指定key，默认None 表示所有的key
+count，每次分片最少获取个数，默认None表示采用Redis的默认分片个数
+"""
+datas = []
+for data in r.hscan_iter("hash1"): 
+    datas.append(data)
 ```
 
