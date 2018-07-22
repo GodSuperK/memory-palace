@@ -10,4 +10,5 @@
 8. [Mysql Basics](mysql-basics.md)
 9. [Redis-Basics](redis-basics.md)
 10. [How to connect redis server in Python](redis-py-connect.md)
+11. [JS NOTE](js-note.md)
 
