@@ -5,4 +5,5 @@
 3. [Java Core Basic](java_core_basic.md)
 4. [How to choose editor?](editor_choose.md)
 5. [Question and Answers](question_answer.md)
+6. [How to install Android Studio](https://developer.android.com/studio/install?hl=zh-cn)
 
