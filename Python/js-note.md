@@ -92,3 +92,25 @@ functionName();
 <button type="button" name="button" onclick="functionName()"></button>
 ```
 
+### 7. 交互
+
+```javascript
+// 向页面输出内容
+document.write("<h1>Hello, World!</h1>");
+// 警告
+alert("FBI Warning!");
+// 确认, 点击确定, 返回 true, 反之返回false 
+var flag = confirm("你确定要离开本页面吗?");
+// 提问, 点击确定, 返回 input 中的内容, 反之返回 null
+var name = prompt("请输入用户名:")
+var password = prompt("请输入口令")
+// 打开一个新窗口, 返回一个窗口对象
+var new_window = window.open("http://www.imooc.com");
+// 关闭当前窗口
+window.close()
+// 关闭指定窗口
+new_window.close()
+```
+
+
+
