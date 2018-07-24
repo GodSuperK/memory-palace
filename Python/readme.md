@@ -12,3 +12,8 @@
 10. [How to connect redis server in Python](redis-py-connect.md)
 11. [JS NOTE](js-note.md)
 
+
+
+## Module
+1. [introduce logging](module-logging.md)
+
