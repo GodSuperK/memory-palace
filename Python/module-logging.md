@@ -100,7 +100,11 @@ logging.StreamHandler - 向控制台输出日志
 logging.FileHandler - 向文件输出
 	:parm filename: 文件名
 	:parm mode: 文件的打开方式
-logging.handlers.RotatingFileHandler - 文件达到一定大小之后，它会自动将当前日志文件改名，然后创建 一个新的同名日志文件继续输出。比如日志文件是chat.log。当chat.log达到指定的大小之后，RotatingFileHandler自动把文件改名为chat.log.1。不过，如果chat.log.1已经存在，会先把chat.log.1重命名为chat.log.2。。。最后重新创建 chat.log，继续输出日志信息
+logging.handlers.RotatingFileHandler - 文件达到一定大小之后，它会自动将当前
+日志文件改名，然后创建 一个新的同名日志文件继续输出。比如日志文件是chat.log。当
+chat.log达到指定的大小之后，RotatingFileHandler自动把文件改名为chat.log.1。
+不过，如果chat.log.1已经存在，会先把chat.log.1重命名为chat.log.2。。。最后重新
+创建 chat.log，继续输出日志信息
 	:parm filename: 文件名
 	:parm mode: 文件的打开方式
 	:parm maxBytes: 用于指定日志文件的最大文件大小。如果maxBytes为0，意味着日志文件可以无限大
