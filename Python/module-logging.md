@@ -1,6 +1,4 @@
-### logging
-
-
+# logging
 
 ## Sample Use
 
