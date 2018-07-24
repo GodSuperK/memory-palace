@@ -15,5 +15,5 @@
 
 
 ## Module
-1. [introduce logging](module-logging.md)
-
+1. [logging](module-logging.md)
+2. [json](module-json.md)
