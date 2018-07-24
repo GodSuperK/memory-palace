@@ -114,3 +114,44 @@ new_window.close()
 
 
 
+### DOM操作
+
+文档对象模型DOM（Document Object Model）定义访问和处理HTML文档的标准方法。DOM 将HTML文档呈现为带有元素、属性和文本的树结构（节点树）。
+
+ **HTML文档可以说由节点构成的集合，三种常见的DOM节点:**
+
+**1. 元素节点：**上图中<html>、<body>、<p>等都是元素节点，即标签。
+
+**2. 文本节点:**向用户展示的内容，如<li>...</li>中的JavaScript、DOM、CSS等文本。
+
+**3. 属性节点:**元素属性，如<a>标签的链接属性`href`="http://www.imooc.com"。
+
+
+
+```javascript
+// 通过 id 获取 元素节点对象
+var e = document.getElementById("id");
+// 通过元素节点对象的 innerHTML 属性 来访问 文本节点
+document.write(e.innerHTML);
+// 重新修改文本节点的内容
+e.innerHTML = "I love JavaScript!";
+// 修改属性节点(改变HTML样式) object.style.property = new style;
+/*基本属性表
+	backgroundColor = "#CCC";
+	height = "300px";
+	width = "600px";
+	color = "red";
+	font
+	fontFamily
+	fontSize = "20";
+	display = "none";  // 此元素不会被显示
+	display = "block"; // 此元素将显示为块级元素
+*/
+e.style.color = "red";
+// 取消自己的所有样式修改
+e.style = "none";
+// 通过修改类名来修改更多的样式 object.className = classname
+e.className = "myclass";
+
+```
+
