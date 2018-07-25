@@ -21,4 +21,5 @@
 3. [hashlib](module-hashlib.md)
 4. [base64](module-hashlib.md)
 5. :large_blue_circle:[colorama](module-colorama.md)
+6. :large__blue_circle:[prettytable](module-prettytable.md)
 
