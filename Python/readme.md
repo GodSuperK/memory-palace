@@ -17,3 +17,5 @@
 ## Module
 1. [logging](module-logging.md)
 2. [json](module-json.md)
+3. [hashlib](module-hashlib.md)
+4. [base64](module-hashlib.md)
