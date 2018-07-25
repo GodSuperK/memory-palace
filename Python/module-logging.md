@@ -86,7 +86,7 @@ import logging
 
 from logging import handlers
 # 1. 创建logger实例
-logger = logging.getLogger("ABU")
+logger = logging.getLogger("{}_log".format(__name__))
 # 配置过滤级别
 logger.setLevel(logging.INFO)
 # 2. 创建格式化对象
