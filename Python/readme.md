@@ -11,6 +11,7 @@
 9. [Redis-Basics](redis-basics.md)
 10. [How to connect redis server in Python](redis-py-connect.md)
 11. [JS NOTE](js-note.md)
+12. [如何美化程序输出](beautiful_output.md)
 
 
 
@@ -19,3 +20,5 @@
 2. [json](module-json.md)
 3. [hashlib](module-hashlib.md)
 4. [base64](module-hashlib.md)
+5. :large_blue_circle:[colorama](module-colorama.md)
+
