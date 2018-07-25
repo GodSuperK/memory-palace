@@ -24,7 +24,9 @@
 # 1. 导入PrettyTable类
 from prettytable import PrettyTable
 # 2. 设置 table 的列数 和列名
-table = PrettyTable(header_style='upper', padding_width=5,field_names=['No.', 'name', 'score']) # 传入一个列表即可
+table = PrettyTable(
+    header_style='upper', padding_width=5,
+    field_names=['No.', 'name', 'score'])
 # 3. 设置 table 的对齐方式
 table.align = 'l'
 trigger_rules = []

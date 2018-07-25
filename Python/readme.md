@@ -5,7 +5,6 @@
 1. [What is tkinter?](Other/tkinter.md)
 2. [`object.__new__(cls[,...])`](Other/__new__.md)
 3. [Python Singleton Pattern](Other/singleton-pattern.md)
-4. [如何美化程序输出](beautiful_output.md)
 
 ## Note
 
