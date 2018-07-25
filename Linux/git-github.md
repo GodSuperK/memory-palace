@@ -30,6 +30,7 @@ git branch new_name # 创建 new_name 分支
 git checkout name # 切换到 name 分支 
 git checkout -b new_branch_name # 创建分支,并切换到该分支
 git checkout commit_id # 分离HEAD
+git checkout -- <file>... # 舍弃工作目录的改动
 git show commit_id # 将提交与所在分支中的父提交进行对比
 # 将所有指定的分支合并到当前检出的分支中，并为该分支新建一个提交
 git merge branch_name1 branch_name2 ... 
