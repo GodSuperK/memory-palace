@@ -6,6 +6,7 @@
 2. [`object.__new__(cls[,...])`](Other/__new__.md)
 3. [Python Singleton Pattern](Other/singleton-pattern.md)
 4. [Python并发编程](Other/multiple_thread.md)
+5. [Python 文件和目录操作](Other/file-operation.md)
 
 ## Note
 
