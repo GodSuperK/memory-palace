@@ -25,4 +25,5 @@
 5. :large_blue_circle:[module-redis](Python-module/redis-py-connect.md)
 6. :large_blue_circle:[colorama](Python-module/module-colorama.md)
 7. :large_blue_circle:[prettytable](Python-module/module-prettytable.md)
+8. [pickle](Python-module/module-pickle.md)
 
