@@ -103,7 +103,34 @@ if __name__ == "__main__":
 
 ### 5. 进程间通信
 
+进程之间是独立的，互不干扰的内存空间，不共享资源。
+
 Python提供了多种进程间通信的方式， 例如Queue, Pipe, Value+Array等。 Queue 用来在多个进程间实现通信，Pipe 常用来在两个进程间通信。
+
+#### 使用代理通信
+
+```python
+import multiprocessing
+# 创建一个专门用来管理数据的守护进程
+manage = multiprocessing.Manager()
+# 在这个进程中开辟一个列表空间
+list_proxy = manage.list()
+# dict_proxy = manage.dict()
+# queue_proxy = manage.Queue()
+
+list_proxy.append("Hello")
+
+def func(proxy):
+    print(proxy[0])
+
+if __name__ == "__main__":
+    p = multiprocessing.Process(target=func, args=(list_proxy,))
+    p.start()
+    # 阻塞主进程， 避免主进程结束，守护进程同时结束，子进程无法访问开辟的空间
+    p.join()
+```
+
+
 
 #### Queue通信
 
@@ -293,7 +320,7 @@ if __name__ == '__main__':
 
 ### 2. 线程同步
 
-如果多个线程共同对某个数据修改， 则可能出现不可预料的结果，为了保证数据的正确性，需要对多个线程进行同步。使用 Thread 对象的 Lock 和 RLock 可以实现简单的线程同步，这两个对象都有 acquire 方法和 release 方法， 对于那些每次只允许一个线程操作的数据，可以将其操作放到 acquire 和 release 方法之间。
+如果多个线程共同对某个数据修改， 则可能出现不可预料的结果（共享内存存在资源竞争问题），为了保证数据的正确性，需要对多个线程进行同步。使用 Thread 对象的 Lock 和 RLock 可以实现简单的线程同步，这两个对象都有 acquire 方法和 release 方法， 对于那些每次只允许一个线程操作的数据，可以将其操作放到 acquire 和 release 方法之间。
 
 对于 Lock 对象而言， 如果一个线程连续两次进行 acquire 操作， 那么由于第一次 acquire 之后没有 release，第二次 acquire 将挂起线程。 这会导致 Lock 对象永远不会 release，使得线程死锁。RLock 对象允许一个线程多次对其进行 acquire 操作， 因为在其内部通过一个 counter 变量维护着线程 acquire 的次数。 而且每一次的acquire 操作必须有一个 release 操作与之对应，在所有的 release 操作完成之后，别的线程才能申请该 RLock 对象。
 
@@ -337,9 +364,22 @@ if __name__ == '__main__':
 
 在 Python 的原始解释器 CPython 中 存在着 GIL (Global Interpreter Lock), 因此在解释执行Python代码时，会产生互斥锁来限制线程对共享资源的访问，直到解释器遇到 I/O 操作或者操作次数达到一定数目时才会释放 GIL。由于全局解释器锁的存在，在进行多线程操作的时候，不能调用多个CPU内核，只能利用一个内核，所以在进行 CPU 密集型操作的时候， 不推荐使用多线程， 更加倾向于多进程。对于IO密集型操作，多线程可以明显提高效率，例如 Python 爬虫的开发， 绝大多数时间爬虫是在等待 socket 返回数据，网络 IO 的操作延时比 CPU 大得多。
 
+### 4. 线程间通信
 
+线程间共享资源，因为它们属于同一个进程
 
-### 4. 协程
+**队列**：先入先出
+
+```python
+import queue
+
+# 创建一个队列， 可以指定队列大小, 也可以不指定长度，
+q = queue.Queue(5)
+```
+
+### 5.  生产者消费者模型
+
+### 5. 协程
 
 **协程**（coroutine [,kəuru:'ti:n]），又称微线程，纤程， 是一种用户级的轻量级线程。协程拥有自己的寄存器上下文和栈。协程调度切换时，并将寄存器上下文和栈保存到其他地方，在切回来的时候，恢复先前保存的寄存器上下文和栈。因此协程能保留上一次调用时的状态，每次过程重入时，就相当于进入上一次调用的状态。在并发编程中，协程与线程类似，每个协程表示一个执行单元，有自己的本地数据，与其他协程共享全局数据和其他资源。
 
