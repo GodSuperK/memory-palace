@@ -336,3 +336,93 @@ if __name__ == '__main__':
 ### 3. 全局解释器锁(GIL)
 
 在 Python 的原始解释器 CPython 中 存在着 GIL (Global Interpreter Lock), 因此在解释执行Python代码时，会产生互斥锁来限制线程对共享资源的访问，直到解释器遇到 I/O 操作或者操作次数达到一定数目时才会释放 GIL。由于全局解释器锁的存在，在进行多线程操作的时候，不能调用多个CPU内核，只能利用一个内核，所以在进行 CPU 密集型操作的时候， 不推荐使用多线程， 更加倾向于多进程。对于IO密集型操作，多线程可以明显提高效率，例如 Python 爬虫的开发， 绝大多数时间爬虫是在等待 socket 返回数据，网络 IO 的操作延时比 CPU 大得多。
+
+
+
+### 4. 协程
+
+**协程**（coroutine [,kəuru:'ti:n]），又称微线程，纤程， 是一种用户级的轻量级线程。协程拥有自己的寄存器上下文和栈。协程调度切换时，并将寄存器上下文和栈保存到其他地方，在切回来的时候，恢复先前保存的寄存器上下文和栈。因此协程能保留上一次调用时的状态，每次过程重入时，就相当于进入上一次调用的状态。在并发编程中，协程与线程类似，每个协程表示一个执行单元，有自己的本地数据，与其他协程共享全局数据和其他资源。
+
+协程需要用户自己来编写调度逻辑，对于CPU来说，协程其实是单线程，所以CPU不用去考虑怎么调度、切换上下文，这就省去了CPU的切换开销，所以协程在一定程度上又好于多线程。
+
+Python通过 yield 提供了对协程的基本支持，但是不完全，而使用第三方 gevent 库是更好的选择， gevent 提供了比较完善的协程支持。gevent 是一个基于协程的Python 网络函数库，使用 greenlet 在 libev 事件循环顶部提供了一个有高级别并发性的API。主要特性有以下几点：
+
+- 基于 libev 的快速事件循环， Linux 上是 poll 机制
+- 基于 greenlet 的轻量级执行单元
+- API 复用了 Python 标准库里的内容
+- 支持 SSL 的协作式 sockets
+- 可通过线程池或c-ares 实现 DNS 查询
+- 通过 monkey patching 功能使得第三方模块变成协作式
+
+gevent 对协程的支持，本质上是 greenlet 在实现切换工作。greenlet 工作流程如下：假如进行访问网络的IO操作时， 出现阻塞，greenlet 就显示切换到另一段没有被阻塞的代码段执行，知道原先的阻塞状况消失以后，再自动切换回原来的代码段继续处理。因此，greenlet时一种合理安排的船行方式。
+
+由于 IO操作非常耗时， 经常使程序处于等待状态，有了 gevent 为我们自动切换协程， 就保证总有 greenlet 在运行， 而不是等待 IO，这就是协程一般比多线程效率高的原因。由于切换时在IO操作时自动完成， 所以gevent 需要修改Python自带的一些标准库，将一些常见的阻塞， 如 socket, select 等地方实现协程跳转， 这一过程在启动时通过 monkey patch  完成。
+
+```python
+from gevent import monkey
+
+import ssl
+import gevent
+import urllib.request
+"""
+spawn 繁衍
+greenlet 绿色小鸟
+gevent.spawn() 用来创建协程
+gevent.joinall() 用来添加协程任务，并启动运行
+"""
+monkey.patch_all()
+ssl._create_default_https_context = ssl._create_unverified_context
+
+
+def run_task(url):
+    print('Visit --> {}'.format(url))
+    try:
+        resp = urllib.request.urlopen(url)
+        data = resp.read()
+        print('{} bytes received from {}'.format(len(data), url))
+    except Exception as e:
+        print(e)
+
+
+if __name__ == '__main__':
+    urls = ["https://github.com", "https://www.python.org", 'https://www.cnblogs.com']
+    greenlets = [gevent.spawn(run_task, url) for url in urls]
+    gevent.joinall(greenlets)
+
+```
+
+`gevent` 中还提供了对池的支持。当拥有动态数量的 greenlet 需要进行并发管理（限制并发数）时，就可以使用池， 这在处理大量的网络和IO操作时是非常需要的。
+
+```python
+from gevent import monkey
+from gevent.pool import Pool
+
+import ssl
+import urllib.request
+
+monkey.patch_all()
+ssl._create_default_https_context = ssl._create_unverified_context
+
+
+def run_task(url):
+    print('Visit --> {}'.format(url))
+    try:
+        resp = urllib.request.urlopen(url)
+        data = resp.read()
+        print('{} bytes received from {}'.format(len(data), url))
+    except Exception as e:
+        print(e)
+    return 'url: {} --->finish'.format(url)
+
+
+if __name__ == '__main__':
+    pool = Pool(2)
+    urls = ["https://github.com", "https://www.python.org", 'https://www.cnblogs.com']
+    results = pool.map(run_task, urls)
+    print(results)
+```
+
+### 5. 分布式进程
+
+TODO
+
