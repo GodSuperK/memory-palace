@@ -347,7 +347,7 @@ if __name__ == '__main__':
 
 Python通过 yield 提供了对协程的基本支持，但是不完全，而使用第三方 gevent 库是更好的选择， gevent 提供了比较完善的协程支持。gevent 是一个基于协程的Python 网络函数库，使用 greenlet 在 libev 事件循环顶部提供了一个有高级别并发性的API。主要特性有以下几点：
 
-- 基于 libev 的快速事件循环， Linux 上是 poll 机制
+- 基于 libev 的快速事件循环， Linux 上是 epoll 机制
 - 基于 greenlet 的轻量级执行单元
 - API 复用了 Python 标准库里的内容
 - 支持 SSL 的协作式 sockets
