@@ -371,6 +371,7 @@ if __name__ == '__main__':
 **队列**：先入先出
 
 ```python
+# 线程Queue
 import queue
 
 # 创建一个队列， 可以指定队列大小, 也可以不指定长度，
