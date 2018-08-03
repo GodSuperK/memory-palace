@@ -16,7 +16,7 @@
 4. [Mysql-Note](Note/mysql-basics.md)
 5. [Redis-Note](Note/redis-basics.md)
 6. [JS-Note](Note/js-note.md)
-7. [XPath-Note](Note/Xpath-Note.md)
+7. [XPath-Note](Note/XPath-Note.md)
 
 ## Python Module
 1. [logging](Python-module/module-logging.md)
