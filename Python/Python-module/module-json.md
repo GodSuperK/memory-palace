@@ -1,6 +1,11 @@
 # json
 
+## What is JSON?
+
+JSON 是 JavaScript 对象表示法 （JavaScript Object Notation）, 用于存储和交换文本信息。JSON 比 XML更小、更快、更易解析，因此JSON在网络传输中，尤其是Web前端中运用非常广泛。JSON使用 JavaScript 语法来描述数据对象，但是JSON 仍然独立于语言和平台。 JSON解析器和JSON库支持许多不同的编程语言，其中就包括Python。
+
 ## How to use json?
+
 ```python
 import json
 
