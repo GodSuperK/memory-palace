@@ -7,6 +7,7 @@
 3. [Python Singleton Pattern](Other/singleton-pattern.md)
 4. [Python并发编程](Other/multiple_thread.md)
 5. [Python 文件和目录操作](Other/file-operation.md)
+6. [HTTP标准](Other/http.md)
 
 ## Note
 
