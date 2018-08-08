@@ -284,5 +284,187 @@ if __name__ == "__main__":
 
 ## 更人性化的 Requests
 
+### 一、请求
 
+```python
+import requests
+
+# 不带参数的 get 请求
+resp_get = requests.get("https://www.baidu.com")
+# 带参数的 get 请求
+params = {'name': 'abu', 'password': 'kaduoxi'}
+resp_get_param = requests.get(url="https://httpbin.org/get", params=params)
+# 查看完整的url
+print(resp_get_param.url)
+
+# post 请求
+post_data = {'name': 'ABU', 'password': 'kaduoxi'}
+resp_post = requests.post(url='https://httpbin.org/post', data=post_data)
+```
+
+### 二、响应与编码
+
+```python
+import requests
+
+resp = requests.get(url="https://www.baidu.com")
+# resp.content -> bytes
+print("Content:", resp.content)
+# resp.text -> str
+print("Text:", resp.text)
+# resp.encoding -> 根据HTTP头猜测的网页编码格式
+print("Encoding:", resp.encoding)
+```
+
+#### 文本出现乱码
+
+**方法1**
+
+```python
+# 将页面的编码形式修改正确
+resp.encoding = "utf8"
+print(resp.text)
+```
+
+**方法2**
+
+```python
+import chardet
+# -> {'encoding': 'utf-8', 'confidence': 0.99, 'language': ''}
+# confidence 是检测精确度， encoding 是编码形式
+right_encoding = chardet.detect(resp.content)['encoding']
+resp.encoding = right_encoding
+print(resp.text)
+```
+
+### 三、请求头headers 处理
+
+```python
+import requests
+
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
+}
+resp_get = requests.post(url='https://httpbin.org/', headers=headers)
+resp_post = requests.post(url='https://httpbin.org/post', headers=headers)
+```
+
+### 四、响应码 code 和响应头 headers 处理
+
+```python
+import requests
+
+resp = requests.get(url='https://httpbin.org')
+if resp.status_code == requests.codes.ok:
+    # 获取 response 的状态码
+    print(resp.status_code)
+    # 获取response 的 headers 信息 -> dict
+    print(resp.headers)
+    # 字典的操作，通过key取value， 如果key不存在，返回None
+    print(resp.headers.get('content-type'))
+else:
+    # 主动的产生一个异常
+    # 当响应码是4XX和5XX时，会抛出异常
+    # 当响应码是200时，返回None
+    resp.raise_for_status()
+```
+
+### 五、Cookie 处理
+
+```python
+# 如果响应中包含Cookie的值， 可以如下方式获取 Cookie 的值
+import requests
+from spider.utils import Utils
+
+
+# 获取response 中返回的cookie值
+def get_cookie_1():
+    resp = requests.get(url='https://github.com/')
+    # <class 'requests.cookies.RequestsCookieJar'>
+    # 兼容性类; 是一个cookielib.CookieJar，但暴露了一个字典接口。
+    print(type(resp.cookies))
+
+    # 使用字典接口迭代cookies
+    for i in resp.cookies.keys():
+        print(i, resp.cookies[i])
+
+    # 使用类字段迭代
+    Utils.show_cookie(resp.cookies)
+
+
+# 在发送的请求中携带自己定义的cookie值
+def get_cookie_2():
+    cookies = {'name': 'abu', 'password': 'kaduoxi'}
+    resp = requests.get(url='https://httpbin.org', cookies=cookies)
+    print(resp.text)
+
+
+"""
+有时候我们不需要关系 Cookie 值是多少，只是希望每次访问的时候，
+程序自动的把cookie的值带上，像浏览器一样。
+Requests提供了一个session的概念，在连续访问网页，处理登陆跳转时特别方便，
+不需要关注具体细节。
+
+"""
+def get_cookie_4():
+    loginURL = 'http://www.xxxx.com/login'
+    s = requests.Session()
+    # 首先访问登陆界面，作为游客，服务器会先分配一个cookie
+    r = s.get(loginURL, allow_redirects=True)
+    datas = {'name': 'abu', 'password': 'kaduoxi'}
+    # 向登陆链接发送post请求，验证成功，游客权限转为会员权限
+    r = s.post(loginURL, data=datas, allow_redirects=True)
+    print(r.text)
+
+
+if __name__ == "__main__":
+    pass
+```
+
+### 六、重定向与历史信息
+
+```python
+"""
+处理重定向只是需要设置一下 allow_redirects 字段即可，例如:
+requests.get(url, allow_redirects=True)
+设置为False表示禁止重定向
+可以通过r.history字段查看历史信息，即访问成功之前的所有请求跳转信息
+"""
+import requests
+
+resp = requests.get('http://www.sun.com')
+# 获取实际请求的url
+print(resp.url)
+print(resp.status_code)
+# 迭代所有跳转历史
+for i in resp.history:
+    print(i.url)
+```
+
+### 七、超时设置
+
+```python
+requests.get('https://github.com', timeout=2)
+```
+
+### 八、代理设置
+
+使用代理 Proxy, 你可以为任意请求方法通过设置 proxies 参数来配置单个请求：
+
+```python
+import requests
+proxies = {
+    'http': "http://0.10.1.10:3128",
+    'https': "http://10.10.1.10:1080"
+}
+requests.get("http://example.org", proxies=proxies)
+```
+
+代理需要使用HTTP Basic Auth， 可以使用 `http://user:password@host/`语法
+
+```python
+proxies = {
+    'http': 'http://user:pass@10.10.1.10:3128',
+}
+```
 
