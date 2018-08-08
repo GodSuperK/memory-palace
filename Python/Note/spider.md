@@ -126,3 +126,163 @@ if __name__ == "__main__":
 1. User-Agent: 有些服务器或Proxy 会通过该值来判断是否是浏览器发出的请求。
 2. Content-Type: 在使用REST接口时，服务器会检查该值，用来确定HTTP Body中的内容该怎样解析。在使用服务器提供的RESTful或SOAP服务时， Content-Type 设置错误会导致服务器拒绝服务。常见的取值有：application/xml(在 XML RPC， 如 RESTful/SOAP 调用时使用)、application/json (在 JSON RPC调用时使用)、application/x-www-from-urlencoded(浏览器提交web表单时使用)
 3. Referer: 服务器有时候会检查防盗链
+
+### Cookie 处理
+
+```python
+import urllib.request
+from http import cookiejar
+
+from spider.utils import Utils
+
+
+def main():
+    # 取消ssl全局验证
+    Utils.unverified_ssl()
+    # 使用CookieJar 对象管理cookie
+    cookie = cookiejar.CookieJar()
+    # 创建一个请求打开器，将一个HTTPCookieProcessor cookie处理器对象作为参数传入
+    opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cookie))
+    # 使用opener 的open 方法发起请求
+    response = opener.open('https://www.zhihu.com')
+	# 迭代cookie
+    Utils.show_cookie(cookie)
+
+
+if __name__ == "__main__":
+    main()
+```
+
+### 设置响应超时时间
+
+```python
+import urllib.request
+from urllib.error import URLError
+from spider.utils import Utils
+
+Utils.unverified_ssl()
+try:
+    # 如果请求超时，则会抛出 urllib.error.URLError 异常
+    resp = urllib.request.urlopen('https://www.google.com', timeout=2)
+except URLError as e:
+    print(e)
+```
+
+### 获取响应状态码
+
+对于 200 OK 来说， 只要使用 urlopen 返回的 response 对象的 getcode() 方法就可以得到 HTTP 的返回码。 但对其他返回码来说， urlopen 会抛出异常。这时候，就要检查异常对象的 code 属性了。
+
+```python
+import urllib.request
+
+from spider.utils import Utils
+
+Utils.unverified_ssl()
+try:
+    resp = urllib.request.urlopen('http://39.105.73.108/hello')
+    print(resp.read())
+except urllib.request.HTTPError as e:
+    if hasattr(e, 'code'):
+        print('Error code:', e.code)
+```
+
+### 重定向
+
+urllib 默认情况下会针对 HTTP 3XX 返回码自动进行重定向动作。要检测是否发生了重定向动作，只要检查一下Response的URL和Request的URL是否一致就可以了。
+
+```python
+import urllib.request
+
+URL = 'http://www.zhihu.cn'
+resp = urllib.request.urlopen(URL)
+isReDirected = resp.geturl() == URL
+```
+
+
+
+### Proxy的设置
+
+使用ProxyHandler在程序中动态设置代理
+
+```python
+from urllib.request import ProxyHandler
+import urllib.request
+
+from spider.utils import Utils
+
+Utils.unverified_ssl()
+
+opener = urllib.request.build_opener(ProxyHandler({'http:': '127.0.0.1:8787'}))
+# 设置urllib 全局opener, 之后所有的访问都使用这个代理
+urllib.request.install_opener(opener)
+resp = urllib.request.urlopen("https://www.baidu.com")
+print(resp.read())
+```
+
+```python
+
+opener = urllib.request.build_opener(ProxyHandler({'http:': '127.0.0.1:8787'}))
+# 不设置全局代理
+resp = opener.open("https://www.baidu.com")
+print(resp.read())
+```
+
+### http.client实现
+
+```python
+import http.client
+import urllib.parse
+
+
+def req_get():
+    conn = None
+    try:
+        conn = http.client.HTTPConnection("www.baidu.com")
+        conn.request("GET", '/')
+        resp = conn.getresponse()
+        # 获得返回状态码， 和返回说明
+        print(resp.status, resp.reason)
+        # 获得响应的头部信息(列表格式)
+        print(resp.getheaders())
+        # 获得响应的头部信息（字符串格式）
+        print(resp.msg)
+    except Exception as e:
+        print(e)
+    finally:
+        if conn:
+            conn.close()
+
+
+def req_post():
+    conn = None
+    post_data = {'name': 'ABU', 'password': 'kaduoxi'}
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36"}
+    data = urllib.parse.urlencode(post_data).encode()
+    try:
+        conn = http.client.HTTPConnection("httpbin.org", timeout=3)
+        conn.request("POST", '/post', data, headers=headers)
+        resp = conn.getresponse()
+        # 获得返回状态码， 和返回说明
+        print(resp.status, resp.reason)
+        # 获得响应的头部信息(列表格式)
+        print(resp.getheaders())
+        # 获得响应的头部信息（字符串格式）
+        print(resp.msg)
+        print(resp.read().decode())
+    except Exception as e:
+        print(e)
+    finally:
+        if conn:
+            conn.close()
+
+
+if __name__ == "__main__":
+    req_post()
+
+```
+
+## 更人性化的 Requests
+
+
+
