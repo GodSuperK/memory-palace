@@ -19,6 +19,7 @@
 6. [JS-Note](Note/js-note.md)
 7. [XPath-Note](Note/XPath-Note.md)
 8. [Spider-Note](Note/spider.md)
+9. [Regular-Expression-Note](Note/regular_expression.md)
 
 ## Python Module
 1. [logging](Python-module/module-logging.md)
