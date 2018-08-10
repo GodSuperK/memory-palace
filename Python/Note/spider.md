@@ -468,3 +468,19 @@ proxies = {
 }
 ```
 
+## HTML 解析大法
+
+### 强大的Beautifulsoup
+
+Beautiful Soup 是一个可以从HTML 或 XML文件中提取数据的Python库。它能够通过你喜欢的转换器实现惯用的文档导航、查找、修改文档的方式。在Python爬虫开发中，我们主要用到的是 Beautiful Soup 的查找提取功能，修改文档的方式很少用到。
+
+**安装**: pip install beautifulsoup4
+
+**解析器比较**
+
+![](images/parser_compare.png)
+
+选择安装 lxml 作为新的解析器
+
+`pip install lxml`
+
