@@ -484,3 +484,145 @@ Beautiful Soup 是一个可以从HTML 或 XML文件中提取数据的Python库�
 
 `pip install lxml`
 
+#### 创建 BeautifulSoup 对象
+
+1. 直接通过字符串创建
+
+```python
+from bs4 import BeautifulSoup
+soup = BeautifulSoup(html_str, 'lxml', from_encoding='utf-8')
+```
+
+2. 通过文件来创建
+
+```python
+soup = BeautifulSoup(open('index.html'))
+```
+
+3. 打印 soup 对象的内容
+
+```python
+print(soup.prettify())
+```
+
+4. 对象种类
+
+Beautiful Soup 将复杂HTML文档转换成一个复杂的树形结构，每个节点都是Python对象，所有对象可以归纳为4种：
+
+ - Tag
+- NavigableString
+- BeautifulSoup
+- Comment
+
+1）Tag: 标签及其内容称为 Tag 对象 , 两个重要属性 name and attrs
+
+```python
+# 获取name
+soup.p.name
+# 获取指定属性
+soup.p['class']
+soup.p.get('class')
+# 获取所有属性 -> dict
+soup.p.attrs
+```
+
+2）NavigableString: 表示标签内的字符串
+
+```python
+# 获取标签内的文字
+soup.b.string
+```
+
+3）BeautifulSoup: bs4.element.Comment 表示的是一个文档的全部内容
+
+4）Comment: 表示注释, bs4.element.Comment对象
+
+5. 遍历文档树
+
+1）Tag 的 `.content`属性可以将 Tag 子节点以列表的方式输出
+
+```python
+# 获取Tag对象的子节点列表
+soup.head.contents
+# 获取列表的大小
+len(soup.head.contents)
+# 通过列表索引获取里面的值
+soup.head.contents[3].string
+```
+
+`.descendants`属性返回的是一个生成器， 可以对Tag的所有后代节点进行循环：
+
+```python
+for child in soup.head.descendants:
+    print(child)
+```
+
+`.children`属性返回的是一个生成器，可以对Tag的所有子节点进行循环
+
+```python
+for child in soup.head.children:
+    print(child)
+```
+
+获取节点的内容
+
+```python
+"""string
+1. 如果一个标签里面没有标签了，那么 .string -> 标签里面的内容
+2. 如果包含1个或多个子节点， -> None
+"""
+print(soup.body.contents[1].string)
+"""strings
+用于tag 中包含多个字符串的情况，可以进行循环遍历。
+"""
+fro string in soup.strings:
+    # 返回对象的规范字符串形式
+    print(repr(string)
+
+""" stripped_strings
+去掉输出字符串中包含的空格或空行
+"""
+for i in soup.stripped_strings:
+	# 返回对象的规范字符串形式
+	print(repr(i))
+```
+
+2） 父节点
+
+每个Tag或字符串都有父节点：被包含在某个Tag中。
+
+通过`.parent`属性来获取某个元素的父节点。例如：`<head>`标签是`<title>`标签的父节点。
+
+```python
+soup.title.parent
+```
+
+通过Tag的`.parents`属性可以递归得到元素的所有父辈节点
+
+```python
+for parent in soup.a.parents:
+    print(parent.name)
+```
+
+3）兄弟节点（和本节点处在同一级的节点）
+
+`.next_sibling`属性可以获取该节点的下一个兄弟节点
+
+`.previous_sibling`可以获取该节点的上一个兄弟节点
+
+如果节点不存在，则返回None，空白或者空行也可以被视作一个节点，所以得到的结果可能是空白或者空行
+
+`.next_siblings`可以获取该节点后面的所有兄弟节点的生成器
+
+`.previous_siblings`可以获取该节点后面的所有兄弟节点的生成器
+
+```python
+print(soup.p.next_sibling.next_sibling)
+```
+
+4）前后节点（我不喜欢）
+
+前后节点针对所有节点，不分层次
+
+#### 搜索文档树
+
