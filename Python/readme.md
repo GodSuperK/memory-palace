@@ -8,6 +8,7 @@
 4. [Python并发编程](Other/multiple_thread.md)
 5. [Python 文件和目录操作](Other/file-operation.md)
 6. [HTTP标准](Other/http.md)
+7. [自定义工具集](Other/utils.py)
 
 ## Note
 
