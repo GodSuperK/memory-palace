@@ -35,7 +35,7 @@ def _format_addr(s):
 # 发件人地址
 from_addr = 'iamliuche@163.com'
 # 授权码
-password = "kdc123"
+password = "xxxxxx"
 # 收件人地址
 to_addr = "1796017500@qq.com"
 # 163 网易邮箱服务器地址
