@@ -9,6 +9,7 @@
 5. [Python 文件和目录操作](Other/file-operation.md)
 6. [HTTP标准](Other/http.md)
 7. [自定义工具集](Other/utils.py)
+8. [如何使用Python发邮件提醒](Other/mail-python.md)
 
 ## Note
 
