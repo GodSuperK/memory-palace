@@ -626,3 +626,247 @@ print(soup.p.next_sibling.next_sibling)
 
 #### 搜索文档树
 
+
+
+
+
+
+
+## 基础爬虫架构及运行流程
+
+![](images/spider_framework.png)
+
+基础爬虫框架主要包括五大模块，分别为爬虫调度器、URL管理器、HMTL下载器、HTML解析器、数据存储器。功能分析如下：
+
+1. 爬虫调度器主要负责统筹其他四个模块的协调工作。
+2. URL管理器负责管理URL链接，维护已经爬取的URL集合和未爬取的URL集合，提供获取新URL链接的接口。
+3. HTML下载器用于从URL管理器中获取未爬取的URL链接并下载HTML网页。
+4. HTML解析器用于从HTML下载器中获取已经下载的HTML网页，并从中解析出新的URL链接交给URL管理器，解析出有效数据交给数据存储器。
+5. 数据存储器用于将HTML解析器解析出来的数据通过文件或者数据库的形式存储起来。
+
+![](images/run_flow.png)
+
+### URL 管理器(UrlManger)
+
+包括两个变量：已爬取URL的集合，未爬取URL的集合
+
+实现接口：
+
+1. 判断是否有待取的URL，  has_new_url()
+2. 添加新的URL到未爬取集合中，add_new_url(url), add_new_urls(urls)
+3. 获取一个未爬取的URL，get_new_url()
+4. 获取未爬取URL集合的大小，new_urls_size()
+5. 获取已经爬取的URL集合的大小，old_urls_size()
+
+```python
+class UrlManger(object):
+    def __init__(self):
+        # 使用 set 类型， 可以直接提供链接去重复功能
+        self.new_urls = set()  # 未爬取URL集合
+        self.old_urls = set()  # 已爬取URL集合
+
+    def has_new_url(self):
+        """判断是否有待取的URL"""
+        return self.new_urls_size != 0
+
+    def add_new_url(self, url):
+        """添加新的URL到未爬取集合中"""
+        # 判断链接是否未None (HTML解析器可能解析不出链接，返回None)
+        if url is None:
+            return
+        # 判断链接是否在已爬取URL集合中
+        if url in self.old_urls:
+            return
+        self.new_urls.add(url)
+
+    def add_new_urls(self, urls):
+        """添加新的URL集合到未爬取集合中"""
+        # 判断链接是否未None (HTML解析器可能解析不出链接，返回None)
+        if urls is None or len(urls) == 0:
+            return
+        for url in urls:
+            self.add_new_url(url)
+
+    def get_new_url(self):
+        """获取一个未爬取的URL"""
+        url = self.new_urls.pop()
+        self.old_urls.add(url)
+        return url
+
+    @property
+    def new_urls_size(self):
+        """获取未爬取URL集合的大小"""
+        return len(self.new_urls)
+
+    @property
+    def old_urls_size(self):
+        """获取已爬取URL集合的大小"""
+        return len(self.old_urls)
+```
+
+### HTML 下载器(HTMLDownloader)
+
+HTML 下载器用来下载网页， 需要注意网页的编码，以保证下载的网页没有乱码。
+
+**实现接口：**
+
+1. 下载HTML网页 download(url)
+
+```python
+import requests
+import chardet
+
+class HTMLDownloader(object):
+    headers = {
+        'User-Agent': ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) '
+                       'Chrome/68.0.3440.106 Safari/537.36')
+    }
+
+    def download(self, url):
+        resp = requests.get(url, headers=self.headers)
+        if resp.status_code == 200:
+            resp.encoding = chardet.detect(resp.content)['encoding']
+            return resp.text
+        return None
+```
+
+
+
+### HTML 解析器(HTMLParser)
+
+HTML 解析器可以自己选择使用什么解析库（re, bs4, lxml,...)。需要解析的部分主要分为提取数据和提取新的url链接。
+
+实现接口：
+
+1.  解析接口：传入参数为当前页面的url和HTML下载器返回的网页内容, parse(page_url, html)
+
+```python
+from bs4 import BeautifulSoup
+from urllib.parse import urljoin
+
+class HTMLParser(object):
+
+    @staticmethod
+    def parser(page_url, html):
+        """
+        :param page_url: 对应的html内容的url地址
+        :param html: 下载的html内容
+        :return:
+        """
+        if page_url is None or html is None:
+            return
+
+        soup = BeautifulSoup(html, 'lxml')
+        # 1. 提取数据
+        data = HTMLParser._extract_data(page_url, soup)
+        # 2. 提取新链接
+        new_urls = HTMLParser._extract_new_urls(page_url, soup)
+        return data, new_urls
+
+    @staticmethod
+    def _extract_data(page_url, soup):
+        data = {}
+        # 提取标题
+        title = soup.h1.string
+
+        div_paras = soup.find('div', {'class': 'lemma-summary'})
+        # 提取摘要
+        summary = "".join(div_paras.strings)
+        data[page_url] = {'title': title, 'summary': summary}
+        return data
+
+    @staticmethod
+    def _extract_new_urls(page_url, soup):
+        # 提取待爬取的链接
+        base = "https://baike.baidu.com/"
+        div_paras = soup.find('div', {'class': 'lemma-summary'})
+        a = div_paras.find_all('a')
+        print(a)
+        if a is None:
+            return
+        # 有的链接没有 href 属性， 要小心处理
+        new_urls = {urljoin(base, i.get('href')) for i in a}
+        return new_urls
+```
+
+### 数据存储器(DataOutput)
+
+存储数据的方式有分批存储，一次性存储。
+
+**实现接口**:
+
+1. 将解析出来的数据存储到内存中， store_data(data)
+2. 将存储的数据输出为指定的文件格式，output_html(), output_json(), output_csv()... 
+
+```python
+class DataOutput(object):
+
+    def __init__(self):
+        # 将数据缓存在内存中
+        self.datas = []
+        self.DIRs = 'downloads'
+
+    def store_data(self, data):
+        if data is None:
+            return
+        self.datas.append(data)
+
+    def output_json(self):
+        if not os.path.exists(self.DIRs):
+            os.mkdir(self.DIRs)
+
+        with open('baike.json', 'w') as f:
+            json.dump(self.datas, f)
+
+    # TODO other output type
+```
+
+### 爬虫调度器(SpiderMan)
+
+爬虫调度器首先要做的事初始化各个模块，然后通过 crawl(root_url)方法开始爬取，方法内部实现按照运行流程控制各个模块的工作。
+
+```python
+from spider_utils import UrlManger
+from spider_utils import HTMLDownloader
+from spider_utils import HTMLParser
+from spider_utils import DataOutput
+
+
+class SpiderMan(object):
+    def __init__(self, root_url):
+        self.root_url = root_url
+        self.url_manager = UrlManger()
+        self.html_downloader = HTMLDownloader()
+        self.data_output = DataOutput()
+
+    def crawl(self):
+        # 将根入口添加到url管理器的待爬取集合中
+        self.url_manager.add_new_url(self.root_url)
+
+        while self.url_manager.old_urls_size != 100:
+            # 判断是否有待爬取的url
+            if self.url_manager.has_new_url():
+                # 获取一个未爬取的url链接
+                new_url = self.url_manager.get_new_url()
+                # 交给 HTML 下载器取访问这个链接， 拿到下载好的html字符串文本
+                html_text = self.html_downloader.download(new_url)
+                # 将 html_text 交给HTML解析器取提取数据，和包含的新链接
+                data, new_urls = HTMLParser.parser(new_url, html_text)
+                # 把数据交给数据存储器
+                self.data_output.store_data(data)
+                # 把链接添加到url管理器中的待爬取链接集合
+                self.url_manager.add_new_urls(new_urls)
+        self.data_output.output_json()
+
+
+def main():
+    root_url = "https://baike.baidu.com/item/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB"
+    spider = SpiderMan(root_url)
+    spider.crawl()
+
+
+if __name__ == "__main__":
+    main()
+
+```
+
