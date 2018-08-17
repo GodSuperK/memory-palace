@@ -86,6 +86,8 @@ deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-security main restricted
 1. Albert - A desktop agnostic launcher.
 2. Google Chrome - Access the Internet.
 3. Atom - A hackable text editor for the 21st Century.
+4. Typora - A markdown editor, markdown reader.
+5. DeepinScrot - 截图工具
 ```
 
 2. **中文输入法配置**
@@ -137,7 +139,30 @@ deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-security main restricted
    sudo gdebi google-chrome-stable_current_amd64.deb
    ```
 
-   
+8. **安装Typora**
+   ```shell
+   # optional, but recommended
+   sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys BA300B7755AFCFAE
+   # add Typora's repository
+   sudo add-apt-repository 'deb https://typora.io/linux ./'
+   sudo apt-get update
+   # install typora
+   sudo apt-get install typora
+   ```
+
+9. **安装DeepinScrot:**
+
+   ```shell
+   sudo apt-get install python-gtk2
+   sudo apt-get install afnix
+   wget http://packages.linuxdeepin.com/deepin/pool/main/d/deepin-scrot/deepin-scrot_2.0-0deepin_all.deb
+   sudo dpkg -i deepin-scrot_2.0-0deepin_all.deb
+   deepin-scrot
+   ```
+
+   推荐配置快捷键使用 `ctrl+shift+4`
+
+10. 
 
 ## 4. 开发环境搭建篇
 
