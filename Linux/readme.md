@@ -6,3 +6,4 @@
 4. [Ubuntu指南](ubuntu_manual.md)
 5. [Linux 软件管理](software-manage.md)
 6. [Grub Secure](grub_fix.md)
+8. [银河战舰计划](diary-install-Ubuntu.md)
