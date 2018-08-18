@@ -166,7 +166,20 @@ deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-security main restricted
 
 ## 4. 开发环境搭建篇
 
+### 1. Vim 配置
 
+### 2. Python3.X 开发环境搭建
+
+```shell
+# 安装pip3
+sudo apt install python3-pip
+# 安装 virtualenv
+pip3 install virtualenv
+# 安装 virtualenvwrapper
+pip3 install virtualenvwrapper
+# 安装Pycharm 
+sudo snap install pycharm-professional --classic
+```
 
 ## 5. Tips
 
@@ -174,7 +187,7 @@ deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-security main restricted
 
 ## 6. 继续学习篇
 
-
+1. [Basic snap usage](basic_snap_usage.md)
 
 ## 7. FQA
 
