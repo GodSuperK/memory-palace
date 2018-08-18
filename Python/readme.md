@@ -11,7 +11,7 @@
 7. [自定义工具集](Other/utils.py)
 8. [如何使用Python发邮件提醒](Other/mail-python.md)
 9. [Pip Basic Usage](Other/pip_usage.md)
-10. [Python 虚拟环境使用](Ohter/virtualenv_usage.md)
+10. [Python 虚拟环境使用](Other/virtualenv_usage.md)
 
 ## Note
 
