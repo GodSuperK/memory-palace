@@ -40,6 +40,18 @@ git branch -d branch_name
 
 ```
 
+### Git Config
+
+```shell
+# 配置用户信息
+git config --global user.name "XXX"
+git config --global usre.email "XXX"
+# 配置文本编辑器
+git config --global core.editor "vim"
+# 查看已经配置的信息
+git config --list
+```
+
 
 
 ### Branches
