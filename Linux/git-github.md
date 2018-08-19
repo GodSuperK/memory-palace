@@ -83,3 +83,11 @@ git push origin master
 git pull orgin master
 ```
 
+设置密码缓存
+```shell
+# 默认缓存15分钟
+git config --global credential.helper cache
+# 自定义缓存时间
+git config --global credential.helper 'cache --timeout=3600'
+```
+
