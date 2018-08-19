@@ -167,7 +167,7 @@ deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-security main restricted
 ## 4. 开发环境搭建篇
 
 ### 1. Vim 配置
-
+[See this](vim_comfig.md)
 ### 2. Python3.X 开发环境搭建
 
 ```shell
