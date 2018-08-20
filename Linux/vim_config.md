@@ -90,7 +90,16 @@ syntax enable
 set background=dark
 colorscheme solarized
 ```
+### How to install YCM?
+```shell
+sudo apt install build-essential cmake3
+sudo apt install python-dev python3-dev
+git clone https://github.com/Valloric/YouCompleteMe.git
+git submodule update --init --recursive 
+./install.py --java-completer
 
+# Finally, add Plugin 'Valloric/YouCompleteMe' and restart vim
+```
 
 
 如何让gvim全屏？
