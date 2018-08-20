@@ -1,10 +1,10 @@
 # Linux
 
-1. [Git&GitHub](git-github.md)
-2. [Linux 磁盘分区](linux-disk.md)
-3. [硬盘类型介绍](https://blog.csdn.net/tianlesoftware/article/details/6009110)
-4. [Ubuntu指南](ubuntu_manual.md)
-5. [Linux 软件管理](software-manage.md)
-6. [Grub Secure](grub_fix.md)
-8. [银河战舰计划](diary-install-Ubuntu.md)
-9. [如何安装Mysql?](mysql_install.md)
+## 目录结构
+1. **command-usage** - Linux命令使用
+2. **core** - Linux核心内容
+3. **core-tool-usage** - Linux下最常用的工具配置(vim, git)及使用
+4. **software** - Linux下常用软件的管理
+5. **FQA** - 常见问题解答
+6. **pics** - 演示图片存放目录
+
