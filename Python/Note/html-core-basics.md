@@ -180,7 +180,13 @@
     </form>
 ```
 
+### Upload File
 
+```html
+<form action="index.html" method="post" enctype="multipart/form-data">
+    <input type="file">
+</form>
+```
 
 
 
