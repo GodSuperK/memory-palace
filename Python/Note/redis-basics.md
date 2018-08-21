@@ -6,7 +6,10 @@
 >
 > 值的类型决定了值本身支持的操作。Redis支持不同无序、有序的列表，无序、有序的集合间的交集、并集等高级服务器端原子操作。
 
-
+## How to install?
+```shell
+sudo apt install redis-server
+```
 
 ## Redis 基本命令
 
