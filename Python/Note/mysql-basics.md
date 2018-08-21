@@ -9,9 +9,11 @@
 # 连接 Mysql 服务器
 mysql -uroot -pqwe123
 # Ubuntu 关闭 Mysql 服务
-sudo service mysql stop
+sudo systemctl stop mysql.service
 # Ubuntu 启动 Mysql 服务
-sudo service mysql start
+sudo systemctl start mysql.service 
+# Ubuntu 查看mysql服务状态
+systemctl status mysql.service
 ```
 
 ## 库级操作语句
