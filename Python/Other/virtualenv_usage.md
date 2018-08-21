@@ -23,7 +23,7 @@ source env_name/bin/active
 ## 3. 退出虚拟环境
 
 ```shell
-deactive
+deactivate
 ```
 
 
