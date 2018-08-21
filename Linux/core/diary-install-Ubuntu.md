@@ -88,6 +88,7 @@ deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-security main restricted
 3. Atom - A hackable text editor for the 21st Century.
 4. Typora - A markdown editor, markdown reader.
 5. DeepinScrot - 截图工具
+6. VLC - Linux下最好用的视频播放器 
 ```
 
 2. **中文输入法配置**
@@ -162,12 +163,14 @@ deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-security main restricted
 
    推荐配置快捷键使用 `ctrl+shift+4`
 
-10. 
+10. 安装VLC： `sudo apt install vlc`
+
+
 
 ## 4. 开发环境搭建篇
 
 ### 1. Vim 配置
-[See this](vim_config.md)
+[See this](../core_tool_usage/vim_config.md)
 ### 2. Python3.X 开发环境搭建
 
 ```shell
@@ -181,13 +184,31 @@ pip3 install virtualenvwrapper
 sudo snap install pycharm-professional --classic
 ```
 
+### 3. Install Mysql
+
+[See this](../software/mysql_install.md)
+
+### 4. Install Redis
+
+`sudo apt install redis-server`
+
+### 5. Install Mongdb
+
+
+
+
+
+
+
+
+
 ## 5. Tips
 
 
 
 ## 6. 继续学习篇
 
-1. [Basic snap usage](basic_snap_usage.md)
+
 
 ## 7. FQA
 
@@ -197,4 +218,4 @@ sudo snap install pycharm-professional --classic
 
 2. 开机启动进入**grub secure mod**
 
-   > see grub_fix.md
+   > see FQA/grub_fix.md
