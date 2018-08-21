@@ -17,7 +17,7 @@
 | `apt autoremove`   | 自动删除不需要的包                    |
 | `apt full-upgrade` | 在升级软件包时自动处理依赖关系        |
 | `apt search`       | 搜索应用程序                          |
-| `apt show`         | 显示安装细节                          |
+| `apt show`         | 显示包的信息                          |
 | `apt list`         | 列出包含条件的包（已安装， 可升级等） |
 | `apt edit-sources` | 编辑源列表                            |
 
