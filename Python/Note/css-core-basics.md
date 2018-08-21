@@ -85,8 +85,15 @@ selector {
 
 ```css
 selector {
-    text-decoration: line-through; /* overline; cursive;*/
+    text-decoration: line-through;/*删除线 overline;上划线 cursive; underline 下划线*/
     text-align: center;
+    line-height: 100px; /*line-height=height can vertical Center*/
+    text-indent: 2em; /*首行缩进*/
+    text-transform: lowercase; upercase; capitalize/*文本的形式，大写？小写？首字母大写？*/
+    /*文本超出部分，用...显示*/
+    white-space: nowrap; /*不换行 normal 正常换行*/
+    overflow: hidden; /*超出部分隐藏*/
+    text-overflow: ellipsis; /*文本超出部分使用...显示*/
 }
 ```
 
