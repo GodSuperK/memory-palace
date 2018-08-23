@@ -89,6 +89,7 @@ deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-security main restricted
 4. Typora - A markdown editor, markdown reader.
 5. DeepinScrot - 截图工具
 6. VLC - Linux下最好用的视频播放器 
+7. Peek - A Gif Recorder 
 ```
 
 2. **中文输入法配置**
@@ -163,8 +164,13 @@ deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-security main restricted
 
    推荐配置快捷键使用 `ctrl+shift+4`
 
-10. 安装VLC： `sudo apt install vlc`
-
+10. **安装VLC：** `sudo apt install vlc`
+11. **Install Peek:** 
+    ```shell
+    sudo add-apt-repository ppa:peek-developers/stable
+    sudo apt update
+    sudo apt install peek
+    ```
 
 
 ## 4. 开发环境搭建篇
