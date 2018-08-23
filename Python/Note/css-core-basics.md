@@ -191,9 +191,174 @@ tag < class < id
 
 
 ### Box Model
+![](images/box-model.png)
 
+1. padding 调整的是盒子自身的大小，会撑大盒子。
+2. 嵌套div时，外部div如果没有设置border, 则内部div的margin设置时会一直往上找，直到找到边界位置。
+3. 相邻div间的margin，取值为两个div各自设置margin的最大值，而不是相加值。
+
+### 浮动
+
+###  定位
+
+1. 固定定位 - 将元素固定在 Screen 的指定位置
+
+   ```css
+   /*css*/
+   div {
+       height: 200px;
+       width: 200px;
+       position: fixed;
+       right: 20px;
+       bottom: 50px;
+       /*
+       left,top also do the same thing
+       */
+   }
+   ```
+
+2. 相对定位 - 相对于自身原来的位置定位，不会脱离文档流
+
+   ```css
+   div {
+       height: 200px;
+       width: 200px;
+       position: relative;
+       right: 20px;
+       bottom: 50px;
+       /*
+       left,top also do the same thing
+       */
+   }
+   ```
+
+3. 绝对定位 - 参照于已经定位的父元素或浏览器进行定位，会脱离文档流
+
+   ```css
+   /*相对浏览器进行绝对定位*/
+   div {
+       height: 200px;
+       width: 200px;
+       position: absolute;
+       right: 20px;
+       bottom: 50px;
+       /*
+       left,top also do the same thing
+       */
+   }
+   ```
+
+   ```css
+   /*父相子绝（父元素相对定位，子元素相对父元素绝对定位）*/
+   .outer {
+       width: 200px;
+       height: 200px;
+       background: red;
+       position: relative;
+   }
+   
+   .inner {
+       width: 200px;
+       height: 200px;
+       background: green;
+       position: absolute;
+       right: 20px;
+       bottom: 10px;
+   }
+   /*只有使用绝对定位的元素使用该值才有用*/
+   /*z-index: 10; 控制层级，数值越大，层级越高（可以被看见）*/
+   ```
+
+   
 
 
 ### Tools
 
 1. Google Browser Inspect
+
+2. [Reset CSS](https://meyerweb.com/eric/tools/css/reset/)
+
+   ```css
+   /* http://meyerweb.com/eric/tools/css/reset/ 
+      v2.0 | 20110126
+      License: none (public domain)
+   */
+   
+   html, body, div, span, applet, object, iframe,
+   h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+   a, abbr, acronym, address, big, cite, code,
+   del, dfn, em, img, ins, kbd, q, s, samp,
+   small, strike, strong, sub, sup, tt, var,
+   b, u, i, center,
+   dl, dt, dd, ol, ul, li,
+   fieldset, form, label, legend,
+   table, caption, tbody, tfoot, thead, tr, th, td,
+   article, aside, canvas, details, embed, 
+   figure, figcaption, footer, header, hgroup, 
+   menu, nav, output, ruby, section, summary,
+   time, mark, audio, video {
+   	margin: 0;
+   	padding: 0;
+   	border: 0;
+   	font-size: 100%;
+   	font: inherit;
+   	vertical-align: baseline;
+   }
+   /* HTML5 display-role reset for older browsers */
+   article, aside, details, figcaption, figure, 
+   footer, header, hgroup, menu, nav, section {
+   	display: block;
+   }
+   body {
+   	line-height: 1;
+   }
+   ol, ul {
+   	list-style: none;
+   }
+   blockquote, q {
+   	quotes: none;
+   }
+   blockquote:before, blockquote:after,
+   q:before, q:after {
+   	content: '';
+   	content: none;
+   }
+   table {
+   	border-collapse: collapse;
+   	border-spacing: 0;
+   }
+   ```
+
+   
+
+
+
+### 常用样式
+
+1. 导航栏样式
+
+   ```css
+   ul {
+       list-style: none;
+   }
+   li {
+       height:30px;
+       width: 30px;
+       background: green;
+       margin-left:20px;
+       float: left;
+   }
+   ```
+
+2. 解决高度塌陷问题
+
+   ```css
+   /*解决父盒子由于嵌套盒子浮动而高度塌陷的问题*/
+   .clearfix::after {
+       display: block;
+       clear: both;
+       content: '';
+   }
+   ```
+
+   
