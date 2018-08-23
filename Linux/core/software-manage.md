@@ -20,6 +20,10 @@
 | `apt show`         | 显示包的信息                          |
 | `apt list`         | 列出包含条件的包（已安装， 可升级等） |
 | `apt edit-sources` | 编辑源列表                            |
+| 'add-apt-repository' | 添加软件源                            |
+```shell
+sudo add-apt-repository ppa:peek-developers/stable
+```
 
 2. 安装单个`.deb`软件包文件
 
