@@ -171,6 +171,7 @@ deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-security main restricted
     sudo apt update
     sudo apt install peek
     ```
+12. **安装音视频解码器** `sudo apt install ubuntu-restricted-extras`
 
 
 ## 4. 开发环境搭建篇
