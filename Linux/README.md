@@ -26,5 +26,6 @@
 1. [安装Mysql](software/mysql_install.md) - How to install mysql 5.7 on Ubuntu 18.04?
 ## FQA
 1. [Grub安全模式](FQA/grub_fix.md) - 开机进入Grub Secure 怎么办？
+2. [Mac 重装系统](FQA/reinstall_mac_os.md) - 使用U盘启动方式重装系统
 
 
