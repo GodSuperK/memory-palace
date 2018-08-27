@@ -90,6 +90,7 @@ deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-security main restricted
 5. DeepinScrot - 截图工具
 6. VLC - Linux下最好用的视频播放器 
 7. Peek - A Gif Recorder 
+8. Bookworm - A Ebook reader
 ```
 
 2. **中文输入法配置**
@@ -172,7 +173,12 @@ deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ bionic-security main restricted
     sudo apt install peek
     ```
 12. **安装音视频解码器** `sudo apt install ubuntu-restricted-extras`
-
+13. **Install Bookworm**
+    ```shell
+    sudo apt-add-repository ppa:bookworm-team/bookworm
+    sudo apt update
+    sudo apt install bookworm
+    ```
 
 ## 4. 开发环境搭建篇
 
