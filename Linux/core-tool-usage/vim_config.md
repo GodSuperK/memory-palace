@@ -105,3 +105,11 @@ git submodule update --init --recursive
 如何让gvim全屏？
 
 安装图形vim `sudo apt install vim-gnome`
+
+### config markdown preview
+
+add `Plugin 'iamcco/markdown-preview.vim'` to the `vimrc` file and type `:PlugInstall`
+
+**Usage:**
+    1. MarkdownPreview - open preview window in markdown buffer
+    2. MarkdownPreviewStop - close the preview window and server
