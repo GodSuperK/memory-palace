@@ -6,4 +6,5 @@
 4. [How to choose editor?](editor_choose.md)
 5. [Question and Answers](question_answer.md)
 6. [How to install Android Studio](https://developer.android.com/studio/install?hl=zh-cn)
+7. [Java Note](java-basic-note.md)
 
