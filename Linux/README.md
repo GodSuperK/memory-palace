@@ -18,6 +18,7 @@
 4. [硬盘分类](core/disk-type.md) - 市面上都有哪些类型的硬盘？
 5. [Ubuntu快捷键汇总](core/shortcut.md) - 包含Linux通用快捷键，以及Ubuntu桌面快捷键
 6. [Ubuntu桌面指南](core/ubuntu_manual.md) - 如何使用Ubuntu桌面？
+7. [Ubuntu桌面快捷键](core/desktop_keyboard.md) - 最常用的Ubuntu快捷键
 
 ## core-tool-usage
 1. [Git&GitHub](core-tool-usage/git-github.md) - 如何使用Git和GitHub?
