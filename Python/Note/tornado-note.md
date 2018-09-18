@@ -96,3 +96,38 @@ if __name__ == "__main__":
             self.write("Hello, World!")
 ```
 
+### Input
+
+![](images/query_rest.png)
+
+**获取查询字符串及body体参数的方法:**
+```python
+# query param and body param [get one arg if has more params, get last one] 
+get_argument(key, default=None) 
+# [get all params return a list of params]
+get_arguments(key)
+# only query
+get_query_argument(key, default=None)
+get_query_arguments(key)
+# only body
+get_body_argument(key, default=None)
+get_body_arguments(key)
+
+
+```
+### Output
+1. `render(template_name)` - 返回 html 文件
+2. `write(chunk)` 
+    - 接受bytes, unicode and dict, 
+    - 保存到缓冲区中，请求处理完成输出到浏览器, 
+    - 调用flush()方法刷新缓冲区, 将内容返回给浏览器
+    - 传入dict 会更改响应头的content type = application/json
+    - 调用finish() 可以结束请求处理，直接返回请求结果
+3. `redirect(url)` - 跳转到指定的路由
+
+### Application 参数含义
+1. `handlers=[]` 配置路由表 每个路由规则放在tuple里
+2. `debug=True` 调试模式, 代码改动，自动重新启动服务器
+3. `template_path='templates'` 模板文件的根目录
+
+
