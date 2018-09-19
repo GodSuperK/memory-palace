@@ -125,9 +125,82 @@ get_body_arguments(key)
     - 调用finish() 可以结束请求处理，直接返回请求结果
 3. `redirect(url)` - 跳转到指定的路由
 
+
 ### Application 参数含义
 1. `handlers=[]` 配置路由表 每个路由规则放在tuple里
 2. `debug=True` 调试模式, 代码改动，自动重新启动服务器
 3. `template_path='templates'` 模板文件的根目录
+4. `autoescape=None` 整个项目全部取消特殊字符转义
+5. `static_path='statics'` 静态文件的根目录
+
+### 响应头的设置
+1. `set_header(name, value)` - sets the given response header name and value.
+2. `add_header(name, value)` - adds the given response header name and value. Unlike `set_header`, `add_header` may be called multiple times
+    to return multiple values for the same header.
+3. `clear_header(name)` - Clears an outgoing header, undoing a previous `set_header` call. Note that this method does not apply to multi-valued headers
+    set by `add_header`.
+
+### 错误处理(路由错误，返回404页面)
+1. `send_error(status_code=500,**kwargs)` - Sends the given HTTP error code to the browser.
+2. `send_error` 内部实现调用了`write_error()` 所以可以通过重写`write_error` 来实现自定义错误响应页面
+3. `set_status(code,status)`, 设置响应状态
+4. `r'/(.*)', utils.NotFoundHandler)` 定义404路由，放在路由表的最后 
+
+### 请求处理流程
+
+![](images/request_life.png)
+
+### 静态文件的引用
+
+![](images/static_files.png)
+
+![](images/static_files2.png)
+
+
+### Template Grammer
+
+![](images/template_grammer.png)
+
+![](images/for_while.png)
+
+
+```
+render() 通过关键字传参数的方式为模板填充动态数据
+
+{{ expression }} return 后可以写的python表达式都可以写 
+{% directives %} 其他模板指令 
+
+{% if 1 %}
+ ...
+{% else %}
+ ...
+{% end %}  end 是结束代码块的标记
+
+{% for ... in ...%}
+ ...
+{% end %}
+
+{% set a=0 %} set 是变量赋值指示符
+{% while a < 5 %}
+ {{ a }}
+ {% set a+=1 %}
+{% end %}
+
+{#...#} 在模板中注释python表达式的运行
+{{! 1+1 }} 加上!会取消模板渲染, 页面会显示 {{ 1+1 }}
+{#!
+{%!
+```
+
+#### 模板转义
+
+![](images/template_escape.png)
+
+```
+默认会将字符串中的特殊符号进行转义，所以后台发送的html代码会作为普通字符串解析
+{% raw ... %} 使用raw指令可以进行局部取消转义
+{% autoescape None %} 整个模板文件中取消转义
+{{ escape(...) }} 转义字符串
+```
 
 
