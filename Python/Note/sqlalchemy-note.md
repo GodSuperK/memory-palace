@@ -31,7 +31,17 @@ db_url = ("mysql+pymysql://{USERNAME}:{PASSWORD}@{HOSTNAME}:"
 engine = create_engine(db_url)
 # Base 作为模型类的基类
 Base = declarative_base(engine)
-conn = engine.connect()
+
+def test_connect():
+    """数据库连接测试"""
+    conn = engine.connect()
+    q = conn.execute("select 1")
+    print(q.fetchone())
+
+
+if __name__ == "__main__":
+    test_connect()
+
 ```
 #### 创建模型
 
