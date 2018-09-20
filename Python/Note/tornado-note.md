@@ -192,6 +192,14 @@ render() 通过关键字传参数的方式为模板填充动态数据
 {%!
 ```
 
+**其他模板指令**
+
+![](images/template_apply.png)
+
+![](images/template_linkify.png)
+
+
+
 #### 模板转义
 
 ![](images/template_escape.png)
@@ -202,5 +210,47 @@ render() 通过关键字传参数的方式为模板填充动态数据
 {% autoescape None %} 整个模板文件中取消转义
 {{ escape(...) }} 转义字符串
 ```
+
+
+#### 模板继承
+
+![](images/template_extend.png)
+
+![](images/extend_block.png)
+
+![](images/template_import.png)
+
+![](images/template_summing_up.png)
+
+```
+{% extends filepath %} 
+{% block name %}...{% end %}
+{% include filepath %}
+```
+
+#### 函数和类的导入
+
+![](images/func_class_import.png)
+
+![](images/moudle_import.png)
+
+
+#### ui_methods and ui_modules
+
+
+![](images/ui_first.png)
+
+![](images/ui_second.png)
+
+![](images/ui_third.png)
+
+#### 实例
+
+![](images/advertisement_instance.png)
+
+![](images/ad_demo.png)
+
+
+
 
 
