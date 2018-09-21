@@ -133,6 +133,34 @@ def delete():
 
 ```
 
+#### 查询
+
+##### 查询结果
+![](images/query_result.png)
+
+##### 过滤函数
+![](images/filter.png)
+
+##### 模糊查询 
+![](images/mohu_query.png)
+
+##### 查询结果数 
+![](images/query_result_number.png)
+
+##### 排序 
+![](images/query_sort.png)
+
+##### 函数
+![](images/query_function.png)
+
+##### 聚合函数
+![](images/query_function_juhe.png)
+
+##### 其他函数
+![](images/query_function_other.png)
+
+##### 选择条件
+![](images/query_if.png)
 
 
 
