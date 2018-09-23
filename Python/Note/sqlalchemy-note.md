@@ -163,4 +163,33 @@ def delete():
 ![](images/query_if.png)
 
 
+##### 原生SQL查询
+![](images/sql_query.png)
+
+
+#### 表关系
+##### 一对一表关系
+
+![](images/rel1-1-1.png)
+![](images/rel1-1-2.png)
+![](images/rel1-1-3.png)
+![](images/rel1-1-4.png)
+![](images/rel1-1-5.png)
+
+##### 一对多表关系
+
+![](images/rel1-n-1.png)
+
+##### 多对多表关系
+示例：每个用户可以收藏多个文章，每个文章可以被多个用户收藏
+
+
+#### 包管理
+![](images/rel_path1.png)
+![](images/rel_path.png)
+
+
+
+
+
 
