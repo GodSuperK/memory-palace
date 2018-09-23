@@ -45,3 +45,6 @@ sudo apt purge mysql-client-core-5.7
 sudo apt purge mysql-server-core-5.7
 
 ```
+
+## Mysql 配置文件 
+`/etc/mysql/mysql.conf.d/mysqld.cnf`
