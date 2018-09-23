@@ -48,3 +48,13 @@ sudo apt purge mysql-server-core-5.7
 
 ## Mysql 配置文件 
 `/etc/mysql/mysql.conf.d/mysqld.cnf`
+
+
+### 在运行时修改字符集和字符序
+如果不指定字符序，则使用字符集默认的字符序
+
+```mysql
+show variables like "%char%";
+set character_set_database="utf8";
+set character_set_server="utf8";
+```
