@@ -280,3 +280,13 @@ authenticated 装饰器的功能
 ![](images/login_check5.png)
 
 
+### Session
+cookie 中的信息可以用来保存用户的登录信息，但是coolkie 是很容易被拦截的，所有其中必定不能有用户的任何私密信息，那么又有什么办法可以让服务器保存用户的登录信息，但是cookie中又不会有用户的任何信息呢?
+
+![](images/session_1.png)
+![](images/session_2.png)
+![](images/session_3.png)
+
+### XSRF 跨站伪造请求防范
+![](images/xsrf_detective.png)
+
