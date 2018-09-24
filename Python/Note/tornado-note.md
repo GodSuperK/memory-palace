@@ -246,11 +246,37 @@ render() 通过关键字传参数的方式为模板填充动态数据
 
 #### 实例
 
+[TODO 图片上传失败]
+
 ![](images/advertisement_instance.png)
 
 ![](images/ad_demo.png)
 
 
+### Cookie
 
+![](images/cookie_set.png)
+![](images/cookie_set.png)
+
+### 登陆验证
+我们希望用户只需要在第一次登录的时候输入用户名和密码，之后可以自动登录，不需要再次输入用户名和密码，也就是说在用户第二次访问的时候，服务器能够自动的验证用户登录信息，那么如何实现自动验证的功能呢？
+
+![](images/login_check1.png)
+![](images/login_check2.png)
+
+```
+authenticated 装饰器的功能
+
+进行身份验证(针对特殊操作)
+1. 验证成功，执行操作
+2. 验证失败，跳转到登陆页面
+```
+
+在完成登录之后，再来看看，我们从一个路由跳转到登录页面之后，再完成登录之后，该如何跳转到之前的页面呢？
+
+
+![](images/login_check3.png)
+![](images/login_check4.png)
+![](images/login_check5.png)
 
 
