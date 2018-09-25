@@ -80,6 +80,9 @@ find / -name virtualenvwrapper.sh
 
 ```shell
 mkvirtualenv env_name
+# 指定解释器，不指定使用配置文件中配置好的默认解释器
+mkvirtualenv -p /usr/bin/python3 env_name
+
 ```
 
 #### 2. 列出所有虚拟环境
