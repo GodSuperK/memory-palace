@@ -140,12 +140,20 @@ get_body_arguments(key)
 3. `clear_header(name)` - Clears an outgoing header, undoing a previous `set_header` call. Note that this method does not apply to multi-valued headers
     set by `add_header`.
 
+### HTTP 状态码
+1. 404 Not Found - Tornado 会在HTTP请求的路径无法匹配任何RequestHandler类相对应的模式时返回404响应码
+2. 400 Bad Request - 如果你调用了一个没有默认值的`get_argument`函数，并且没有发现给定给定名称的参数，Tornado将自动返回一个400响应码
+3. 405 Method Not Allowed - 如果传入的请求使用了RequestHandler中没有定义的HTTP方法(比如，一个POST请求，但是处理函数中只定义了get方法), Tornado 将返回405响应码
+4. 500 Internal Server Error - 当程序遇到任何不能让其退出的错误时，Tornado将返回 500 响应码, 代码中任何没有捕获的异常也会导致500响应码
+5. 200 OK - 如果响应成功，并且没有其他返回码被设置, Tornado将默认返回一个200响应码
+
 ### 错误处理(路由错误，返回404页面)
 1. `send_error(status_code=500,**kwargs)` - Sends the given HTTP error code to the browser.
 2. `send_error` 内部实现调用了`write_error()` 所以可以通过重写`write_error` 来实现自定义错误响应页面
 3. `set_status(code,status)`, 设置响应状态
 4. `r'/(.*)', utils.NotFoundHandler)` 定义404路由，放在路由表的最后 
 
+如果想使用自己的方法代替默认的错误响应，可以重写RequestHandler中的`write_error()`方法
 ### 请求处理流程
 
 ![](images/request_life.png)
