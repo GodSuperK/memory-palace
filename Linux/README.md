@@ -10,6 +10,7 @@
 
 ## command-usage
 1. [snap](command-usage/command-snap.md) - Ubuntu 16.04 新增的命令
+2. [curl](core-tool-usage/curl-command.md) - 命令行下载工具
 
 ## core
 1. [银河战舰计划](core/diary-install-Ubuntu.md) - Ubuntu From 0 to 1
