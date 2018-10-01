@@ -166,6 +166,16 @@ get_body_arguments(key)
 
 
 ### Template Grammer
+Tornado render 渲染模板的原理
+1. 读取HTML文件
+2. 编译HTML文件为Python模板
+3. 填充Python模板
+4. 将填充好的Python模板响应给客户端
+```python
+from tornado.template import Template
+content = Template("<html><body><h1>{{ title }}</h1></body></html>")
+html = content.generate(title="Hello, Template!")
+```
 
 ![](images/template_grammer.png)
 

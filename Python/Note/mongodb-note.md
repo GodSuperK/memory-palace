@@ -37,7 +37,7 @@
 ### 集合中文档的增删改查
 
 #### 插入文档
-MongoDB 使用 insert() 或 save() 方法向集合中插入文档： `db.COLLECTION_NAME.insert(document)`
+MongoDB 使用 `insert_one() or insert_many()` 或 save() 方法向集合中插入文档： `db.COLLECTION_NAME.insert(document)`
 示例： 
 `db.python.insert({title: 'python', description: '动态语言', url: 'http://www.python.org', tags: ['动态', '编成', '脚本'], likes: 100})`
 python 是我们的集合名称，如果该集合不在该数据库中，MongoDB会自动创建该集合并插入文档。
@@ -92,15 +92,17 @@ MongoDB 使用 find() 方法从集合中查询文档：
     book = {"author": "Mike", "text": "My first book!", "tags": ["爬虫", "Python", "网络"], "date": datetime.datetime.utcnow()}
     book1 = {"author": "Mike", "text": "My first book!", "tags": ["爬虫", "Python", "网络"], "date": datetime.datetime.utcnow()}
     book2 = {"author": "Mike", "text": "My first book!", "tags": ["爬虫", "Python", "网络"], "date": datetime.datetime.utcnow()}
-    book_id = collection.insert(book)
+    book_id = collection.insert_one(book)
     books = [book1, book2]
-    books_id = collection.insert(books)
+    books_id = collection.insert_many(books)
 
     ```
 5. 查询文档
 > MongoDB中最基本的查询就是`find_one`. 这个函数返回一个符合查询的文档，或者在没有匹配的时候返回None. 返回结果是一个之前插入的符合条件的字典类型值。获取多个文档，可以使用find()方法。find()返回一个Cursor实例，通过它我们可以获取每个符合查询条件的文档。
 
     ```python
+    from bson.objectid import ObjectId
+
     collection.find_one()
     # 筛选出 author 为 qiye的文档
     collection.find_one({"author": "qiye"})
@@ -118,10 +120,25 @@ MongoDB 使用 find() 方法从集合中查询文档：
     
     ```python
     collection.update({"author: "qiye"}, {"$set": {"text": "python book"}})
+    doc = collection.find_one({"_id": ObjectId("5bad73fb0f26bb9606c517c5")})
+    doc['age']=1000
+    collection.save(doc)
     ```
 7. 删除文档
 > remove()
 
     ```python
     collection.remove({"author": "qiye"})
+    ```
+
+8. BSON对象序列化以及反序列化
+    ```python
+    import bson.json_util
+    # deserialization 
+    bson_obj = bson.json_util.loads(json_obj)
+    # serialization
+    json_obj = bson.json_util.dumps(bson_obj)
+    
+    
+
     ```
