@@ -30,6 +30,8 @@
 13. [HTTP](Note/http_protocol.md)
 14. [MongoDB](Note/mongodb-note.md)
 15. [Session and Cookie](Note/session_cookie.md)
+16. [Python异步编程](Note/async_programming.md)
+17. [jQuery Note](Note/jquery-note.md)
 
 ## Python Module
 1. [logging](Python-module/module-logging.md)
