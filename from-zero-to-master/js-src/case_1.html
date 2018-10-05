@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>鼠标提示框</title>
+    <style media="screen">
+      .prompt {
+        width: 220px;
+        height: 40px;
+        background: yellow;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <p id="remember_me"><input type="checkbox" name="" value="">7天内自动登陆</p>
+    <div class="prompt">
+      为了信息安全，请勿在网吧或公用电脑上使用此功能！
+    </div>
+    <script type="text/javascript">
+      var remember_me = document.getElementById('remember_me');
+      var prompt = document.getElementsByClassName('prompt')[0];
+      remember_me.onmouseenter = function () {
+        prompt.style.display="block";
+      };
+      remember_me.onmouseleave = function () {
+         prompt.style.display="none";
+      };
+    </script>
+  </body>
+</html>
