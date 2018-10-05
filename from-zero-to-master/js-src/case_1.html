@@ -20,9 +20,11 @@
     <script type="text/javascript">
       var remember_me = document.getElementById('remember_me');
       var prompt = document.getElementsByClassName('prompt')[0];
+      // 鼠标划入事件
       remember_me.onmouseenter = function () {
         prompt.style.display="block";
       };
+      // 鼠标划出事件
       remember_me.onmouseleave = function () {
          prompt.style.display="none";
       };
