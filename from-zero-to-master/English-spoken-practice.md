@@ -10,7 +10,7 @@
 5. Or maybe you like to do something more creative, like **taking photos**, **painting**, or **writing stories** or **writing a blog**.
 6. What about you?
 7. What kind of free time activities do you prefer?
-
+8. More free time activities reference [Free Time Activities English Vocabulary](http://www.vocabulary.cl/Lists/Free_Time_Activities.htm)
 ### Part Two: What do you like doing?
 **Pattern**
 1. In every sentence, after 'like', we use a verb plus -ing.
