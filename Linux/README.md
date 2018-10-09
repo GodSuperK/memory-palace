@@ -21,6 +21,7 @@
 6. [Ubuntu桌面指南](core/ubuntu_manual.md) - 如何使用Ubuntu桌面？
 7. [Ubuntu桌面快捷键](core/desktop_keyboard.md) - 最常用的Ubuntu快捷键
 8. [主机之间文件共享](core/share_your_files.md) - win to linux and linux to win
+9. [额外主题管理](core/themes_manage.md) - 把你的ubuntu变成Mac?
 
 ## core-tool-usage
 1. [Git&GitHub](core-tool-usage/git-github.md) - 如何使用Git和GitHub?
