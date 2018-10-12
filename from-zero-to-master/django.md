@@ -12,7 +12,7 @@
    ```shell
    python manage.py startapp [app_name]
    ```
-
+   
 3. 创建目录结构
 
    ```
@@ -25,7 +25,18 @@
    └── templates - 管理项目的模板文件
    ```
 
-4. 配置数据库
+4. 注册应用
+
+   ```python
+   # project_name/settings.py
+
+   INSTALLED_APPS = [
+       ...,
+       app_name,
+   ] 
+   ```
+
+5. 配置数据库
 
    使用 pymysql 作为 数据库驱动
 
@@ -54,14 +65,14 @@
    }
    ```
 
-5. 创建迁移，创建Django默认已安装应用的数据表
+6. 创建迁移，创建Django默认已安装应用的数据表
 
    ```shell
    python manage.py makemigrations
    python manage.py migrate
    ```
 
-6. 配置项目模板路径
+7. 配置项目模板路径
 
    ```python
    # project_name/settings.py
@@ -75,7 +86,7 @@
    ]
    ```
 
-7. 配置项目静态文件路径
+8. 配置项目静态文件路径
 
    ```python
    # project_name/settings.py
@@ -84,14 +95,14 @@
    ]
    ```
 
-8. 在Pycharm 中将项目根目录 加入解释器搜索路径
+9. 在Pycharm 中将项目根目录 加入解释器搜索路径
 
    ```
     鼠标右键项目根目录 -> Mark Directory as -> Sources Root
    
    ```
 
-9. 编写测试视图
+10. 编写测试视图
 
    ```python
    # apps/app_name/views.py
@@ -100,7 +111,7 @@
        pass
    ```
 
-10. 配置与测试视图对应的url
+11. 配置与测试视图对应的url
 
     ```python
     # project_name/urls.py
@@ -113,10 +124,11 @@
     ]
 
     ```
-11. 启动服务器，测试项目
+12. 启动服务器，测试项目
 
     ```shell
     python manage.py runserver [ip:port]
     ```
 
     
+
