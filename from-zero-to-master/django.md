@@ -102,6 +102,15 @@
    
    ```
 
+   ```python
+    import os
+    import sys
+
+    # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
+   ```
+
 10. 编写测试视图
 
    ```python
@@ -131,4 +140,22 @@
     ```
 
     
+## 自定义UserModel
+> 当django默认的`auth_user`表提供的字段不满足我们的项目需求的时候，我们就需要扩展django的User模型。
+
+```python
+# users/models.py
+from django.contrib.auth.models import AbstractUser
+
+class UserProfile(AbstractUser):
+    # 扩展字段
+    pass
+
+```
+```python
+# project_name/settings.py
+
+AUTH_USER_MODEL = "users.UserProfile"
+```
+最后创建迁移，会删除掉django自带的`auth_user`表
 
