@@ -219,9 +219,77 @@ admin.site.register(UserProfile, UserProfileAdmin)
    ```
 
 3. Test xadmin site
-  ```visit http://localhost:8000/xadmin/```
+     ```visit http://localhost:8000/xadmin/```
 
 4. 源码安装xadmin
 
    > 拷贝xadmin 的源码到项目根目录下，然后新建一个目录`extra_apps`来作为第三方应用的容器，将该目录Mark 为Sources Root 即可， 然后 `pip uninstall xadmin` 卸载掉之前安装的xadmin, 其他依赖不需要卸载，我们仍然需要用到
+
+5. 为每个应用注册模型
+
+     先在每个应用下新建一个`adminx.py`，用来编写我们的注册模型的代码
+
+     ```python
+     # app_name/adminx.py
+     import xadmin
+     
+     from .models import EmailVerifyCode
+     
+     
+     class EmailVerifyCodeAdmin:
+         # 自定义显示字段
+         list_display = ['email', 'code', 'send_type', 'send_time']
+         # 自定义搜索字段
+         search_fields = ['email', 'code', 'send_type']
+         # 自定义筛选字段
+         list_filter = ['email', 'code', 'send_type', 'send_time']
+     
+     
+     xadmin.site.register(EmailVerifyCode, EmailVerifyCodeAdmin)
+     ```
+
+6. 全局配置
+
+     ```python
+     # users/adminx.py
+     
+     import xadmin
+     from xadmin import views
+     
+     
+     class BaseSettings:
+         enable_themes = True  # 启动切换主题功能
+         use_bootswatch = True  # 添加bootstrap主题
+     
+     
+     class GlobalSettings:
+         site_title = "GMOOC"  # 页面标题
+         site_footer = "gmooc"  # 页面版权
+         menu_style = "accordion"  # 折叠标签
+     
+     
+     xadmin.site.register(views.BaseAdminView, BaseSettings)
+     xadmin.site.register(views.CommAdminView, GlobalSettings)
+     ```
+
+7. 配置中文标签
+
+     ```python
+     # app_name/apps.py
+     
+     from django.apps import AppConfig
+     
+     
+     class UsersConfig(AppConfig):
+         name = 'users'
+         verbose_name = "用户信息"
+     ```
+
+     ```python
+     # app_name/__init__.py
+     
+     default_app_config = "users.apps.UsersConfig"
+     ```
+
+     
 
