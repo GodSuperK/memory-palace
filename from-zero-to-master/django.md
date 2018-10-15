@@ -159,3 +159,69 @@ AUTH_USER_MODEL = "users.UserProfile"
 ```
 最后创建迁移，会删除掉django自带的`auth_user`表
 
+
+## Django Admin
+
+1. 注册模型
+
+```python
+# users/admin.py
+
+from django.contrib import admin
+
+from .models import UserProfile
+
+class UserProfileAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(UserProfile, UserProfileAdmin)
+```
+
+## XAdmin for Django
+[项目地址](https://github.com/sshwsfc/xadmin)
+
+1. Install xadmin
+
+   ```python
+   pip install git+git://github.com/sshwsfc/xadmin.git@django2
+   ```
+
+2. Config xadmin on Django
+
+   ```python
+   # project_name/settings.py
+   INSTALLED_APPS = [
+       ...,
+       'xadmin',
+       'crispy_forms'
+   ]
+   ```
+
+   ```python
+   # project_name/urls.py
+   
+   # from django.contrib import admin
+   from django.urls import path
+   
+   import xadmin
+   
+   urlpatterns = [
+       # path('admin/', admin.site.urls),
+       path('xadmin/', xadmin.site.urls),
+   
+   ]
+   ```
+
+   最后，应用xamdin的数据库迁移
+
+   ```python
+   python manage.py migrate
+   ```
+
+3. Test xadmin site
+  ```visit http://localhost:8000/xadmin/```
+
+4. 源码安装xadmin
+
+   > 拷贝xadmin 的源码到项目根目录下，然后新建一个目录`extra_apps`来作为第三方应用的容器，将该目录Mark 为Sources Root 即可， 然后 `pip uninstall xadmin` 卸载掉之前安装的xadmin, 其他依赖不需要卸载，我们仍然需要用到
+
