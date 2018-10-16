@@ -293,3 +293,114 @@ admin.site.register(UserProfile, UserProfileAdmin)
 
      
 
+## 用户应用功能实现
+
+### 1. 用户登陆
+
+1. 配置用户登陆前端相关页面，修改页面中的静态文件路径，以及跳转路径，配置`urlConf`，最后测试页面是否配置成功
+
+   ```python
+   # project_name/urls.py
+   
+   from django.views.generic import TemplateView
+   
+   
+   urlpatterns = [
+       ...,
+       # 配置
+       path('', TemplateView.as_view(template_name="index.html"), name="index"),
+       # 登陆页面
+       path('login/', TemplateView.as_view(template_name="login.html"), name="login"),
+   ]
+   ```
+
+2. 用户登陆逻辑编写
+
+   1. 判断请求类型
+
+      - GET -> 登陆表单
+
+        ```python
+        # views.py
+        
+        from django.shortcuts import render
+        
+        if request.method == "GET":
+            return render(request, 'login.html', {})
+        ```
+
+      - POST -> Step 2
+
+   2. 登陆验证处理
+
+      1. 获取表单中提交的`用户名` 及 `密码`，（所有POST请求提交的内容都保存在一个字典形式的`request.POST`中）
+
+      2. 使用 django 提供的认证方法，默认使用用户名进行认证
+
+         ```python
+         from django.contrib import auth
+         
+         # 将用户名及密码作为关键字参数传入, 该方法会对数据库进行查询，进行认证
+         # 认证成功，会返回一个 UserProfile model 的实例化对象
+         # 认证失败，返回None
+         user = auth.authenticate(username=username, password=password)
+         ```
+
+      3. 认证成功，使用 django 提供的登陆方法进行登陆, 然后跳转到首页
+
+         ```python
+         if not user:
+             auth.login(request,user)
+             return render(request, 'index.html', {})
+         ```
+
+      4. 认证失败，继续返回登陆页面，同时显示错误信息
+
+         ```python
+         else:
+             return return render(request, 'login.html', {"msg":"用户名或密码错误"})
+         ```
+
+      5. 前端首页使用模板语言(if)进行判断用户是否登陆
+
+         ```html
+         <!--如果用户登陆，显示用户名-->
+         {% if request.user.is_authenicated %}
+         用户名
+         {% else %}
+         <!--如果用户未登陆，显示注册及登陆按钮-->
+         登陆，注册
+         {% endif %}
+         ```
+
+      6. 自定义认证方法
+
+         ```python
+         # views.py
+         from django.contrib.auth.backends import ModelBackend
+         from django.db.models import Q
+         
+         from .models import UserProfile
+         
+         
+         class CustomBackend(ModelBackend):
+         
+             def authenticate(self, request, username=None, password=None, **kwargs):
+                 try:
+                     user = UserProfile.objects.get(Q(username=username) | Q(email=username))
+                     if user.check_password(password):
+                         return user
+                 except Exception:
+                     return None
+         ```
+
+         ```python
+         # settings.py
+         AUTHENTICATION_BACKENDS = (
+         	'users.views.CustomBackend',
+         )
+         ```
+
+         
+
+   3. 
