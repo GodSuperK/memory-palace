@@ -349,7 +349,7 @@ admin.site.register(UserProfile, UserProfileAdmin)
       3. 认证成功，使用 django 提供的登陆方法进行登陆, 然后跳转到首页
 
          ```python
-         if not user:
+         if user:
              auth.login(request,user)
              return render(request, 'index.html', {})
          ```
@@ -365,7 +365,7 @@ admin.site.register(UserProfile, UserProfileAdmin)
 
          ```html
          <!--如果用户登陆，显示用户名-->
-         {% if request.user.is_authenicated %}
+         {% if request.user.is_authenticated %}
          用户名
          {% else %}
          <!--如果用户未登陆，显示注册及登陆按钮-->
