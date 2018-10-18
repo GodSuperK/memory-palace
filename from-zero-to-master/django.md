@@ -599,7 +599,7 @@ class RegisterForm(forms.Form):
    class RegisterForm(forms.Form):
    	email = forms.EmailField(required=True)
        password = forms.CharField(required=True, min_length=8)
-       captcha = CaptchaField()
+       captcha = CaptchaField(error_message="验证码错误")
    ```
 
 5. 将验证码图片渲染到前端页面
@@ -623,6 +623,8 @@ class RegisterForm(forms.Form):
    1. 邮箱注册逻辑
 
       ```python
+      from django.contrib.auth import hashers
+      
       def post(self, request):
           """用户邮箱注册逻辑"""
           # 1. 先使用注册表单验证数据字段是否有效
@@ -631,7 +633,12 @@ class RegisterForm(forms.Form):
               # 2. 提取注册字段
               email = request.POST.get("email", "")
               password = request.POST.get("password", "")
-              # TODO 对邮箱进行数据库查询，是否已经注册
+              # 对邮箱进行数据库查询，是否已经注册
+              u = UserProfile.objects.filter(email=email).first()
+              if u:
+             	    return render(request, 'register.html', 
+                                    {"register_form": register_form, 
+                                     "error_msg": '该邮箱已经注册'})
               # 3. 实例化一个UserProfile对象，然后保存到数据库
               user = UserProfile()
               user.email = email
@@ -653,7 +660,21 @@ class RegisterForm(forms.Form):
           return render(request, "register.html", {'register_form': register_form})
       ```
 
-   2. 在工具包(utils)里编写发送邮箱链接函数
+   2. 配置邮件系统
+
+      ```python
+      # settings.py
+      
+      # 邮件发送信息配置
+      EMAIL_HOST = None  # 邮件服务器
+      EMAIL_PORT = None  # 端口
+      EMAIL_HOST_USER = None  # 发送人的邮箱
+      EMAIL_HOST_PASSWORD = None  # 客户端授权码
+      EMAIL_USE_TLS = False
+      EMAIL_FROM = EMAIL_HOST_USER  # 邮件发送者
+      ```
+
+   3. 在工具包(utils)里编写发送邮箱链接函数
 
       ```python
       # utils/email_send.py
@@ -668,10 +689,10 @@ class RegisterForm(forms.Form):
       def send_email(email, send_type="register"):
           """ 发送邮箱链接
           激活链接原理：
-          1. Server 随机生成一段随即字符串，并保存到数据库，将其和url地址连接起来
+          1. Server 随机生成一段随机字符串，并保存到数据库，将其和url地址连接起来
           2. 将邮箱验证链接发送到用户的邮箱
           3. 当用户点击 url 链接后，进入到 Server 的路由匹配，Server 提取出随机字符串
-          4. 将邮箱和随机字符串和数据库中的字段进行对比
+          4. 将随机字符串和数据库中的字段进行对比
           5. 如果一致，则邮箱激活成功
           6. 如果不一致，则邮箱激活失败
           :param email: 目标邮箱
@@ -683,7 +704,8 @@ class RegisterForm(forms.Form):
           email_record.email = email
           if send_type in ["register", "forget"]:
               email_record.send_type = send_type
-          email_record.code = generate_random_str()
+          # generate_random_str() 用来生成随机字符串
+          email_record.code = generate_random_str(length=16)
           email_record.save()
       
           # 2. 定义邮件 e 的主题和消息
@@ -705,6 +727,7 @@ class RegisterForm(forms.Form):
                                        message=e_message,
                                        from_email=EMAIL_FROM,
                                        recipient_list=[email, ])
+          # 返回状态码
           return send_status
       
       
@@ -727,7 +750,7 @@ class RegisterForm(forms.Form):
           return s
       ```
 
-   3. 编写激活链接验证ActiveUserView
+   4. 编写激活链接验证ActiveUserView
 
       ```python
       class ActiveUserView(generic.View):
@@ -736,31 +759,33 @@ class RegisterForm(forms.Form):
           """
       
           def get(self, request, code):
-              # 数据库查询
-              email_is_exist = EmailVerifyCode.objects.get(code=code)
+              # 1. 数据库查询
+              email_is_exist = EmailVerifyCode.objects.filter(code=code).first()
               if email_is_exist:
-                  # 将该邮箱所属的账户激活
+                  # 2. 将该邮箱所属的账户激活
                   user = UserProfile.objects.get(email=email_is_exist.email)
                   user.is_active = True
                   user.save()
-                  # 跳转到用户个人中心或者首页,登陆页面
-                  return HttpResponseRedirect('/')
+                  # 3. 删除该记录，以防止用户重复激活
+                  email_is_exist.delete()
+                  # 4. 跳转到用户个人中心或者首页,登陆页面
+                  return HttpResponse("您的账户已经成功激活")
               else:
                   return HttpResponse("验证失败")
       ```
 
-   4. 配置ActiveUserView URLConf
+   5. 配置ActiveUserView URLConf
 
       ```python
       # urls.py
-      urlpatterns+=[
-          path('active/(?P<code>\w+)', users_views.ActiveUserView.as_view(), name="active"),
+      from django.urls import re_path
+      
+      urlpatterns += [
+          re_path(r'^active/(?P<code>\w+)/$', users_views.ActiveUserView.as_view(), name="active"),
       ]
       ```
 
-      
-
-   5. 更新LoginVIew，只有用户账户被激活的情况下，才能登陆
+   6. 更新LoginVIew，只有账户已激活的情况下，才能登陆
 
       ```python
       # 只有账户已激活的情况下，才能登陆
@@ -771,4 +796,11 @@ class RegisterForm(forms.Form):
       	return render(request, "login.html", {"error_msg": '账户未激活'})
       ```
 
+### 3. 找回密码
+
+原理：用户点击忘记密码后，返回忘记密码页面，用户输入邮箱，及验证码，当表单验证通过后，后台拿到用户的邮箱，然后给用户发送一个找回密码的链接，当用户点击链接后，进入到服务器的路由匹配，根据正则提取随机字符串，进行数据库查询，如果该随机字符串存在，则验证成功，跳转到修改密码页面，同时将邮箱字段也传到前端，用户输入密码，以及确认密码，提交到后台，后台进行表单验证，如果验证通过，则根据邮箱查询用户实例，修改密码，保存新密码的密文，然后保存到数据库即可，最后跳转到登陆页面。
+
+1. 配置静态页面(一个忘记密码页面[需要用户输入账号及验证码]，一个修改密码页面[用户输入新密码及确认密码]及url
+2. 编写django表单
+3. 编写View
 
