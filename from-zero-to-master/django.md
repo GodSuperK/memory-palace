@@ -804,3 +804,198 @@ class RegisterForm(forms.Form):
 2. 编写django表单
 3. 编写View
 
+
+
+## 4. 机构功能
+
+#### 1. 机构动态数据展示及分页
+
+1. 使用django模板继承复写html页面，将多个页面公用的部分，抽象到base.html中，让子模板继承
+
+2. 配置上传文件的路径，这样在后台管理系统中上传文件的时候，会在字段的`upload_to`参数指定的相对路径前面加上`/media/`，文件会上传到该路径下
+
+   ```python
+   # settings.py
+   
+   TEMPLATES['options']['context_processors'] += ['django.template.context_processors.media',]
+   
+   MEDIA_URL = "/media/"
+   MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+   ```
+
+   配置上传文件的访问处理函数的URLConf
+
+   ```python
+   # urls.py
+   from django.views.static import serve
+   from mxonline.settins import MEDIA_ROOT
+   
+   urlpatterns += [re_path(r'^media/(?P<path>.*)/$', serve, {'document_root': MEDIA_ROOT})]
+   ```
+
+3. 使用后台管理系统添加一些待展示数据
+
+4. 分页实现，使用 [django-pure-pagination](https://github.com/jamespacileo/django-pure-pagination)
+
+   ```html
+   <!-- 自定义分页html样式 -->
+   <!-- 进行判断，是否还有上一页 -->
+   上一页
+   1
+   2
+   3
+   <!-- 进行判断，是否还有下一页 -->
+   下一页
+   
+   <ul class="pagelist">
+   	{% if orgs.has_previous %}
+   		<li class="long"><a href="?{{ orgs.previous_page_number.querystring }}">上一页</a>
+       </li>
+   	{% endif %}
+   	{% for i in orgs.pages %}
+   		{% if i %}
+   			{% ifequal i orgs.number %}
+   				<li class="active"><span>{{ i }}</span></li>
+   			{% else %}
+   				<li><a href="?{{ i.querystring }}" class="page">{{ i }}</a></li>
+   			{% endifequal %}
+   		{% else %}
+   			<li class="none"><a href="">...</a></li>
+   		{% endif %}
+   	{% endfor %}
+   	{% if orgs.has_next %}
+   		<li class="long"><a href="?{{ orgs.next_page_number.querystring }}">下一页</a>
+       	</li>
+   	{% endif %}
+   </ul>
+   ```
+
+#### 2. 根据城市筛选机构
+
+1. 当用户点击城市时，为get请求添加一个`city`参数
+
+   ```html
+   {% for i in cities %}
+   	<a href="?city={{ i.id }}"><span class="">{{ i.name }}</span></a>
+   {% endfor %}
+   ```
+
+2. 后台取出参数，进行数据库查询，将查询结果返回以及city_id返回
+
+   ```python
+   city_id = request.GET.get('city', '')
+   # CourseOrg 中的city 外键在数据表中存储为 city_id
+   if city_id:
+   	all_orgs = CourseOrg.objects.filter(city_id=int(city_id))
+   return query_result, city_id
+   ```
+
+3. 将已选中的条件高亮显示, 同时将全部标签取消高亮
+
+   ```html
+   <a href=""><span class="{% if not city_id %}active2{% endif %}">全部</span></a>
+   {% for i in cities %}
+   <a href="?city={{ i.id }}">
+   <!-- stringformat:'i'是将i.id转为字符串类型 -->
+   <span class="{% ifequal city_id i.id|stringformat:'i' %}active2{% endifequal %}">
+   	{{ i.name }}
+   </span>
+   </a>
+   {% endfor %}
+   ```
+
+4. 增加机构类别筛选的逻辑
+
+   ```html
+   <a href="?city={{ city_id }}">
+       <span class="{% if not ct %}active2{% endif %}">全部</span>
+   </a>
+   <a href="?ct=1&city={{ city_id }}">
+       <span class="{% ifequal ct 1 %}active2{% endifequal %}">培训机构</span>
+   </a>
+   <a href="?ct=2&city={{ city_id }}">
+       <span class="{% ifequal ct 2 %}active2{% endifequal %}">高校</span>
+   </a>
+   <a href="?ct=3&city={{ city_id }}">
+       <span class="{% ifequal ct 3 %}active2{% endifequal %}">个人</span>
+   </a>
+   ```
+
+5. 完善城市筛选加机构类别筛选
+
+   ```html
+   <a href="?ct={{ ct }}">
+       <span class="{% if not city_id %}active2{% endif %}">全部</span>
+   </a>
+   {% for i in cities %}
+   	<a href="?city={{ i.id }}&ct={{ ct }}">
+   	<span class="{% ifequal city_id i.id %}active2{% endifequal %}">
+           {{ i.name }}
+           </span>
+   	</a>
+   {% endfor %}
+   ```
+
+6. `OrgListView` 的完整逻辑
+
+   ```python
+   # views.py
+   
+   class OrgListView(generic.View):
+   	
+       # TODO 逻辑有待优化
+       def get(self, request):
+           cities = CityDict.objects.all()
+           all_orgs = None
+           ct = request.GET.get('ct', '')
+           city_id = request.GET.get('city', '')
+           if ct and city_id:
+               ct = int(ct)
+               city_id = int(city_id)
+               # CourseOrg 中的city 外键在数据表中存储为 city_id
+               all_orgs = CourseOrg.objects.filter(category=ct, city_id=city_id)
+           elif ct:
+               ct = int(ct)
+               all_orgs = CourseOrg.objects.filter(category=ct)
+           elif city_id:
+               city_id = int(city_id)
+               all_orgs = CourseOrg.objects.filter(city_id=city_id)
+           else:
+               all_orgs = CourseOrg.objects.all()
+   
+           # 机构数量
+           nums_org = all_orgs.count()
+   
+           # 对机构进行分页
+           try:
+               page = request.GET.get('page', 1)
+           except PageNotAnInteger:
+               page = 1
+   
+           # per_page 表示每页显示的记录条数
+           p = Paginator(all_orgs, request=request, per_page=5)
+   
+           orgs = p.page(page)
+   
+           return render(request, 'org-list.html', {
+               'orgs': orgs,
+               'cities': cities,
+               'nums_org': nums_org,
+               'city_id': city_id,
+               'ct': ct
+           })
+   	
+   ```
+
+
+
+#### 3. 热门机构排名
+
+根据点击人数排名，显示3个点击人数最多的机构
+
+```python
+hot_orgs = CourseOrg.objects.order_by("-hits")[:3]
+return hot_orgs
+```
+
+#### 4. 根据学习人数和课程数对机构进行排序 
