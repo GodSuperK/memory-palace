@@ -999,3 +999,233 @@ return hot_orgs
 ```
 
 #### 4. 根据学习人数和课程数对机构进行排序 
+
+机构的学习人数：当用户点击我要学习某个课程后,找到该课程的所属机构，机构的学习人数即加1，不是实际学习人数（一个用户可能会被计算多次）
+
+机构的课程数：当前机构发布的课程总数
+
+1. 更新课程机构模型的结构
+
+   ```python
+   # models.py
+   # 新增以下字段
+   nums_of_students = models.IntegerField(verbose_name="学习人数", default=0)
+   nums_of_courses = models.IntegerField(verbose_name="课程数", default=0)
+   ```
+
+2. 为请求增加排序参数
+
+   ```html
+   <li class=""><a href="?sort=nums_of_students">学习人数 &#8595;</a></li>
+   <li class=""><a href="?sort=nums_of_courses">课程数 &#8595;</a></li>
+   ```
+
+3. 排序参数之间添加关联
+
+   ```html
+   <li class="{% if not sort %}active{% endif %}">
+       <a href="?ct={{ ct }}&city={{ city_id }}">全部</a>
+   </li>
+   <li class="{% ifequal sort 'nums_of_students' %}active{% endifequal %}">
+       <a href="?ct={{ ct }}&city={{ city_id }}&sort=nums_of_students">
+           学习人数 &#8595;
+       </a>
+   </li>
+   <li class="{% ifequal sort 'nums_of_courses' %}active{% endifequal %}">
+       <a href="?ct={{ ct }}&city={{ city_id }}&sort=nums_of_courses">
+           课程数 &#8595;
+       </a>
+   </li>
+   ```
+
+4. 机构课程View的完整逻辑（已优化查询逻辑）
+
+   ```python
+   class OrgListView(generic.View):
+   
+       def get(self, request):
+   
+           # 热门机构根据收藏人数排序，显示3个机构
+           hot_orgs = CourseOrg.objects.order_by("-hits")[:3]
+           # 显示已有城市
+           cities = CityDict.objects.all()
+   
+           # 获取所有查询参数
+           ct = request.GET.get('ct', '')
+           city_id = request.GET.get('city', '')
+           # 获取排序参数
+           sort = request.GET.get('sort', '')
+           # 查询所有机构
+           all_orgs = CourseOrg.objects.all()
+           # 机构筛选 by 机构类别(category)
+           if ct:
+               all_orgs = all_orgs.filter(category=int(ct))
+           # 机构筛选 by 城市(city_id)
+           if city_id:
+               # CourseOrg 中的city 外键在数据表中存储为 city_id
+               all_orgs = all_orgs.filter(city_id=int(city_id))
+   
+           # 机构数量
+           nums_org = all_orgs.count()
+           if sort in ['nums_of_students', 'nums_of_courses']:
+               # 排序 by 学习人数(nums_of_students)或课程数(nums_of_courses)
+               all_orgs = all_orgs.order_by("-{}".format(sort))
+   
+           # 对机构进行分页
+           try:
+               page = request.GET.get('page', 1)
+           except PageNotAnInteger:
+               page = 1
+   
+           # per_page 表示每页显示的记录条数
+           p = Paginator(all_orgs, request=request, per_page=5)
+   
+           orgs = p.page(page)
+   
+           return render(request, 'org-list.html', {
+               'orgs': orgs,
+               'cities': cities,
+               'nums_org': nums_org,
+               'city_id': city_id,
+               'ct': ct,
+               'sort': sort,
+               'hot_orgs': hot_orgs
+           })
+   ```
+
+#### 5. 使用ModelForm 来完成 用户咨询的功能
+
+1. 使用`URLConf include`机制， 重新优化所有url
+
+   ```python
+   # mxonline/urls.py
+   from django.urls import path, include
+   
+   urlpatterns = [
+       path('org/', include('organization.urls')),
+   ]
+   ```
+
+   ```python
+   # organization/urls.py
+   from django.urls import path, re_path
+   
+   app_name="organization"
+   
+   urlpatterns = [
+       path('list/', views.OrgListView.as_view(), name="list"),
+   ]
+   ```
+
+   ```html
+   {% url 'organization:list' %}
+   ```
+
+2. 编写`UserAskModelForm`
+
+   ```python
+   # forms.py
+   
+   class UserAskModelForm(forms.ModelForm):
+       """
+       ModelForm 可以继承 模型的字段，同时也可以新增字段
+       """
+   
+       class Meta:
+           model = UserAsk
+           fields = ['name', 'phone', 'course_name']
+   
+       def clean_phone(self):
+           """正则：手机号（精确）,验证手机号是否合法
+   
+           移动：134(0-8)、135、136、137、138、139、147、150、151、152、157、158、159、178、182、183、184、187、188、198
+           联通：130、131、132、145、155、156、175、176、185、186、166
+           电信：133、153、173、177、180、181、189、199
+           全球星：1349
+           虚拟运营商：170
+           :return:
+           """
+           phone = self.cleaned_data["phone"]
+           REGEX_PHONE_EXACT = "^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$"
+           # 将正则表达式编译为pattern对象
+           pattern = re.compile(REGEX_PHONE_EXACT)
+           # 验证用户输入的手机号是否符合我们的 pattern 规则
+           if pattern.match(phone):
+               return phone
+           # 不符合规则，抛出 forms.ValidationError 异常
+           else:
+               raise forms.ValidationError(message="手机号码非法", code="phone_invalid")
+   ```
+
+3. Ajax补充，浏览器发送异步请求，服务器返回`json`数据，使页面不会刷新，提升用户体验。
+
+   ```html
+   // 发送异步请求的流程
+   // 1. 获取按钮元素
+   // 2. 添加点击事件
+   // 3. 绑定函数
+   // 4. 编写异步请求
+   
+   <script>
+       $(function () {
+           $(document).ready(function () {
+               $('#jsStayBtn').on('click', function () {
+                   $.ajax({
+                       cache: false,
+                       type: "POST",
+                       url: "{% url 'organization:add_ask' %}",
+                       data: $('#jsStayForm').serialize(),
+                       async: true,
+                       success: function (data) {
+                           if (data.status === "success") {
+                               console.log(data);
+                               $('#jsStayForm')[0].reset();
+                               alert("提交成功")
+                           } else if (data.status === "failed") {
+                               $('#jsCompanyTips').html(data.error)
+                           }
+                       },
+                   });
+               });
+           });
+       })
+   </script>
+   ```
+
+4. 编写`UserAskView`
+
+   ```python
+   class UserAskView(generic.View):
+       """用户咨询View
+       该功能客户端使用ajax发送异步请求，
+       当用户点击提交按钮后，页面不能刷新, 我们需要返回json格式的数据
+       """
+   
+       def post(self, request):
+           # 定义返回的json数据
+           result = dict()
+           user_ask_form = UserAskModelForm(request.POST)
+           if user_ask_form.is_valid():
+               # 使用表单的快捷方式save 来对模型进行快速实例化，并保存到数据库中
+               user_ask_form.save(commit=True)
+               result["status"] = "success"
+               # 告诉浏览器，我们返回的是json数据, 让浏览器交给 ajax 去解析
+               return HttpResponse(json.dumps(result), content_type="application/json")
+           else:
+               result["status"] = "failed"
+               result["error"] = "添加出错"
+               return HttpResponse(json.dumps(result), content_type="application/json")
+   ```
+
+5. 配置url
+
+   ```python
+   # organization/urls.py
+   
+   urlpatterns += [
+       path('add_ask/', views.UserAskView.as_view(), name="add_ask"),
+   ]
+   ```
+
+   
+
