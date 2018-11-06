@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>简易年历</title>
+  <style media="screen">
+    .calendar {
+        width: 600px;
+        height: 600px;
+        border: 1px solid black;
+      }
+      .calendar ul {
+        list-style: none;
+      }
+      .calendar ul li {
+        width: 100px;
+        height: 100px;
+        border: 1px solid red;
+        float: left;
+      }
+      .calendar .activity {
+        width: 500px;
+        height: 200px;
+        border: 1px solid green;
+        margin: 0 auto;
+        clear: both;
+      }
+    </style>
+</head>
+
+<body>
+  <section class="calendar">
+    <ul>
+      <li>
+        <h2>一月</h2>
+        <p>JANUARY</p>
+      </li>
+      <li>
+        <h2>二月</h2>
+        <p>FEBRUARY</p>
+      </li>
+      <li>
+        <h2>三月</h2>
+        <p>MARCH</p>
+      </li>
+      <li>
+        <h2>四月</h2>
+        <p>APRIL</p>
+      </li>
+      <li>
+        <h2>五月</h2>
+        <p>MAY</p>
+      </li>
+      <li>
+        <h2>六月</h2>
+        <p>JUNE</p>
+      </li>
+      <li>
+        <h2>七月</h2>
+        <p>JULY</p>
+      </li>
+      <li>
+        <h2>八月</h2>
+        <p>AUGUST</p>
+      </li>
+      <li>
+        <h2>九月</h2>
+        <p>SEPTEMBER</p>
+      </li>
+      <li>
+        <h2>十月</h2>
+        <p>OCTOBER</p>
+      </li>
+      <li>
+        <h2>十一月</h2>
+        <p>NOVEMBER</p>
+      </li>
+      <li>
+        <h2>十二月</h2>
+        <p>DECEMBER</p>
+      </li>
+    </ul>
+    <div class="activity">
+      <h2>1月</h2>
+      <p>吃饭去</p>
+    </div>
+  </section>
+
+  <script type="text/javascript">
+    window.onload = function() {
+      // 为每个 li 添加悬浮事件
+      var calendar = document.getElementsByClassName('calendar')[0];
+      var months = calendar.getElementsByTagName('li');
+      var activity = calendar.getElementsByClassName('activity')[0];
+      activities = ["吃饭","喝水","干活", "写代码", "打游戏", "谈恋爱"];
+      for (var i=0; i<months.length; i++) {
+        months[i].index = i;
+        months[i].onmouseenter = function () {
+          this.style.background = "red";
+
+
+          // 为 activity 设置动态内容
+          activity.innerHTML = "<h2>"+(this.index+1)+"月"+"<h2/><p>"+activities[this.index]+"</p>";
+        };
+        months[i].onmouseleave = function () {
+          this.style.background = "";
+        };
+      }
+    };
+  </script>
+</body>
+
+</html>
