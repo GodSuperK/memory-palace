@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>全选按钮</title>
+  </head>
+  <body>
+    <!-- 通过点击全选按钮，实现所有复选框全部呈现选中状态 -->
+    <!-- 反选实现 -->
+
+    <input type="button" name="" value="全选" id="btn1">
+    <input type="button" name="" value="反选" id="btn2">
+    <input type="button" name="" value="全部取消" id="btn3">
+
+    <div id="content">
+      <input type="checkbox" name="" value="">
+      <input type="checkbox" name="" value="">
+      <input type="checkbox" name="" value="">
+      <input type="checkbox" name="" value="">
+      <input type="checkbox" name="" value="">
+      <input type="checkbox" name="" value="">
+      <input type="checkbox" name="" value="">
+    </div>
+
+
+    <script type="text/javascript">
+      window.onload = function () {
+        var content = document.getElementById('content');
+        var checkboxs = content.getElementsByTagName("input");
+
+        var btn1 = document.getElementById("btn1");
+        var btn2 = document.getElementById("btn2");
+        var btn3 = document.getElementById("btn3");
+
+        btn1.onclick = function () {
+          // 全部选中
+          for (var i=0;i<checkboxs.length;i++) {
+            checkboxs[i].checked = true;
+          }
+        };
+        btn2.onclick = function () {
+          // 选中=>取消=>选中
+          for (var i=0;i<checkboxs.length;i++) {
+            if (checkboxs[i].checked == true) {
+              checkboxs[i].checked = false;
+            }else {
+              checkboxs[i].checked = true;
+            }
+          }
+        };
+        btn3.onclick = function () {
+          // 全部取消
+          for (var i=0;i<checkboxs.length;i++) {
+            checkboxs[i].checked = false;
+          }
+        };
+      };
+    </script>
+  </body>
+</html>

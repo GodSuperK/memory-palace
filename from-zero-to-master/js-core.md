@@ -22,3 +22,7 @@
 ## JS 实例
 
 1. [case_1.html](js-src/case_1.html) - 鼠标提示框，鼠标悬浮在元素上，显示提示信息
+2. [case_2.html](js-src/case_2.html) - 修改样式
+3. [case_3.html](js-src/case_3.html) - 复选框全选，反选
+4. [case_4.html](js-src/case_4.html) - 选项卡(点击)的实现
+

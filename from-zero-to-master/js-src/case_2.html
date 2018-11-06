@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>修改div的背景颜色</title>
+    <style media="screen">
+      div {
+        width: 200px;
+        height: 200px;
+        border: 1px solid black;
+        margin-bottom: 10px;
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 通过点击按钮修改4个 div 的背景颜色 -->
+    <input id="btn_green" type="button" value="变绿">
+
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+
+    <script type="text/javascript">
+    // window.onload 事件 等页面元素加载完成时触发
+      window.onload = function () {
+        var btn_green = document.getElementById('btn_green');
+        var divs = document.getElementsByTagName('div');
+        function set_background() {
+          for(var i=0; i<divs.length;i++) {
+            divs[i].style.background = "green";
+          }
+        }
+
+        btn_green.onclick = set_background;
+      };
+    </script>
+  </body>
+</html>

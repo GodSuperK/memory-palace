@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>选项卡</title>
+  <style media="screen">
+    div {
+        width: 100px;
+        height: 50px;
+        border: 1px solid black;
+        display: none;
+      }
+      .active {
+        background-color: yellow;
+      }
+    </style>
+</head>
+
+<body>
+  <!--
+      先将对应选项卡下的内容全部隐藏，然后为按钮添加点击事件，
+      将所有按钮恢复状态，将所有内容全部隐藏，
+      为对应按钮添加高亮状态，将对应的内容显示。
+    -->
+  <section>
+    <input class="active" type="button" name="" value="选项1">
+    <input type="button" name="" value="选项2">
+    <input type="button" name="" value="选项3">
+    <input type="button" name="" value="选项4">
+    <div style="display:block;">内容1</div>
+    <div>内容2</div>
+    <div>内容3</div>
+    <div>内容4</div>
+  </section>
+
+
+  <script type="text/javascript">
+    window.onload = function() {
+      var section = document.getElementsByTagName('section')[0];
+      var btns = section.getElementsByTagName('input');
+      var divs = section.getElementsByTagName('div');
+
+      for (var i=0;i<btns.length;i++) {
+        btns[i].index = i;
+        btns[i].onclick = function() {
+          for (var i=0;i<btns.length;i++) {
+            btns[i].className = "";
+            divs[i].style.display = "none";
+          }
+          this.className = "active";
+          divs[this.index].style.display="block";
+        };
+      }
+
+
+    };
+  </script>
+</body>
+
+</html>
