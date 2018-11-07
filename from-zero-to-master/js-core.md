@@ -159,4 +159,7 @@ arr.plice(1,2, 'f','e');
 5. [case_5.html](js-src/case_5.html) - 简易年历
 6. [case_6.html](js-src/case_6.html) - 隔行变色
 7. [case_7.html](js-src/case_7.html) - 时间换算
+8. [case_8.html](js-src/case_8.html) - 间隔定时器使用
+9. [case_9.html](js-src/case_9.html) - 延时定时器使用
+
 

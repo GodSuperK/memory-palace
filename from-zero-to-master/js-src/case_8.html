@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>间隔型定时器开关小例子</title>
+  <style media="screen">
+    #div1 {
+      width:200px;height:100px;background: red;
+    }
+  </style>
+</head>
+
+<body>
+  <input id="btn1" type="button" name="" value="开启定时器">
+  <input id="btn2" type="button" name="" value="关闭定时器">
+  <script type="text/javascript">
+    var oBtn1 = document.getElementById('btn1');
+    var oBtn2 = document.getElementById('btn2');
+    var timer = null;
+    oBtn1.onclick = function() {
+      timer = setInterval(function(){alert("I love you!");}, 2000);
+    };
+    oBtn2.onclick = function() {
+      clearInterval(timer);
+    };
+  </script>
+
+</body>
+
+</html>
