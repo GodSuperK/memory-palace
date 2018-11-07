@@ -34,7 +34,7 @@
 
 ## 运算符
 
-![](pics/js-pics/operator_table.png)
+![](pics/js-pics/opeator_table.png)
 
 ## 程序流程控制
 ![](pics/js-pics/if_control.png)
