@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>时间换算</title>
+</head>
+<body>
+  <section id="time_conversion">
+    <input type="text" id="text1" name="" value="" placeholder="请输入秒">秒
+    <input type="button" id="btn1" name="" value="时间">
+  </section>
+
+  <script type="text/javascript">
+    // TODO fix big time bug
+    window.onload = function() {
+      var oSection = document.getElementById('time_conversion');
+      var oText = document.getElementById('text1');
+      var oButton = document.getElementById('btn1');
+      oButton.onclick = function() {
+        var iSecond = parseInt(oText.value);
+        var iHour = parseInt(iSecond / 3600);
+        var iMinute = iSecond % 3600;
+        var iSecondRemain = iSecond % 60;
+
+        if (iMinute < 60) {
+          iMinute = 0;
+        }
+
+        if (iHour == 0) {
+          iMinute = parseInt(iSecond / 60);
+        }
+
+        alert("" + iHour + "时" + iMinute + "分" + iSecondRemain + "秒");
+      };
+    };
+  </script>
+</body>
+
+</html>
