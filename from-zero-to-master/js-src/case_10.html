@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>数码时钟</title>
+  <style media="screen">
+
+    body {
+      background-color: white;
+    }
+    .digital_clock {
+      width: 900px;
+      height: 400px;
+      margin: 0 auto;
+    }
+
+      /**
+      0: background-position: 0 0;
+      1: background-position: 160px 0;
+      2: background-position: 0 184px;
+      3: background-position: 241px 184px;
+      4: background-position: 160px 184px;
+      5: background-position: 77px 184px;
+      6: background-position: 326px 90px;
+      7: background-position: 243px 90px;
+      8: background-position: 160px 90px;
+      9: background-position: 77px 90px;
+      */
+      .box {
+        width: 78px;
+        height: 92px;
+        display: inline-block;
+        background-image: url(images/numbers.gif);
+      }
+      .maohao {
+        width: 78px;
+        height: 92px;
+        display: inline-block;
+        background-image: url(images/maohao.jpg);
+        background-position: 179px 132px;
+      }
+      .number_0 {
+        background-position: 0 0;
+      }
+      .number_1 {
+        background-position: 160px 0;
+      }
+      .number_2 {
+        background-position: 0 184px;
+      }
+      .number_3 {
+        background-position: 241px 184px;
+      }
+      .number_4 {
+        background-position: 160px 184px;
+      }
+      .number_5 {
+        background-position: 77px 184px;
+      }
+      .number_6 {
+        background-position: 326px 90px;
+      }
+      .number_7 {
+        background-position: 243px 90px;
+      }
+      .number_8 {
+        background-position: 160px 90px;
+      }
+      .number_9 {
+        background-position: 77px 90px;
+      }
+    </style>
+</head>
+
+<body>
+  <!--
+    1. 效果思路
+    2. 获取系统时间
+      - Date 对象
+      - getHours、getMinutes、getSeconds
+    3. 显示系统时间
+      - 字符串连接
+      - 空位补0
+    4. 设置图片路径
+      - charAt 方法
+  -->
+  <section id="digital_clock" class="digital_clock">
+    <div id='date'>
+      <div class="box number_0"></div>
+      <div class="box number_0"></div>
+      <div class="box number_0"></div>
+      <div class="box number_0"></div>
+      年
+      <div class="box number_0"></div>
+      <div class="box number_0"></div>
+      月
+      <div class="box number_0"></div>
+      <div class="box number_0"></div>
+      日
+      星期
+      <div class="box number_0"></div>
+    </div><br>
+    <div id="time">
+      <div class="box number_0"></div>
+      <div class="box number_0"></div>
+      <div class="maohao"></div>
+      <div class="box number_0"></div>
+      <div class="box number_0"></div>
+      <div class="maohao"></div>
+      <div class="box number_0"></div>
+      <div class="box number_0"></div>
+    </div>
+
+  </section>
+
+  <script type="text/javascript">
+    window.onload = function() {
+      function tick() {
+        var oDate = new Date();
+        var iHours = oDate.getHours();
+        var iMinutes = oDate.getMinutes();
+        var iSeconds = oDate.getSeconds();
+        var iYear = oDate.getFullYear();
+        var iMonth = oDate.getMonth()+1;
+        var iDate = oDate.getDate();
+        var iDay = oDate.getDay();
+        if (iHours < 10) {
+          iHours = '' + 0 + iHours;
+        }
+
+        if (iMinutes < 10) {
+          iMinutes = '' + 0 + iMinutes;
+        }
+
+        if (iSeconds < 10) {
+          iSeconds = '' + 0 + iSeconds;
+        }
+        if (iMonth < 10) {
+          iMonth = '' + 0 + iMonth;
+        }
+        if (iDate < 10) {
+          iDate = '' + 0 + iDate;
+        }
+
+        var sTime = '' + iHours + iMinutes + iSeconds;
+        var oDivTime = document.getElementById('time');
+        var oBox = oDivTime.getElementsByClassName('box');
+        for (var i = 0; i < sTime.length; i++) {
+          oBox[i].className = "box number_" + sTime.charAt(i);
+        }
+
+        var sDate = ''+iYear+iMonth+iDate+iDay;
+        var oDivDate = document.getElementById('date');
+        var oBox1 = oDivDate.getElementsByClassName('box');
+        for (var i = 0; i < sDate.length; i++) {
+          oBox1[i].className = "box number_" + sDate.charAt(i);
+        }
+      }
+      setInterval(tick, 1000);
+      tick();
+    };
+  </script>
+</body>
+
+</html>

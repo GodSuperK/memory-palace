@@ -150,6 +150,19 @@ arr.plice(1,2, 'f','e');
   - clearInterval
   - clearTimeout
 
+3. 字符串方法 charAt() = python 里的 序列索引
+4. Date 对象方法
+  ```JavaScript
+  var oDate = new Date();
+  var iHours = oDate.getHours(); // 返回小时
+  var iMinutes = oDate.getMinutes(); // 返回分钟
+  var iSeconds = oDate.getSeconds(); // 返回秒
+  var iYear = oDate.getFullYear(); //返回年
+  var iMonth = oDate.getMonth()+1; //返回月
+  var iDate = oDate.getDate(); //返回日
+  var iDay = oDate.getDay(); //返回星期
+  ```
+
 ## JS 实例
 
 1. [case_1.html](js-src/case_1.html) - 鼠标提示框，鼠标悬浮在元素上，显示提示信息
@@ -161,5 +174,6 @@ arr.plice(1,2, 'f','e');
 7. [case_7.html](js-src/case_7.html) - 时间换算
 8. [case_8.html](js-src/case_8.html) - 间隔定时器使用
 9. [case_9.html](js-src/case_9.html) - 延时定时器使用
+9. [case_10.html](js-src/case_10.html) - 数码时钟 
 
 
