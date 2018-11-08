@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>延时提示框</title>
+    <style media="screen">
+    div {
+      float: left;
+    }
+    .avatar {
+      width: 100px;
+      height: 100px;
+      background-color: red;
+      margin-right: 10px;
+    }
+    .detail {
+      width: 300px;
+      height: 300px;
+      background-color: blue;
+      display: none;
+    }
+    </style>
+  </head>
+  <body>
+    <!--
+      1. 将鼠标划到头像上，显示用户详细信息，鼠标移开，详细信息过一会消失
+    -->
+    <div class="avatar" id="avatar">
+
+    </div>
+    <div class="detail" id="detail">
+
+    </div>
+
+    <script type="text/javascript">
+      var oDiv1 = document.getElementById('avatar');
+      var oDiv2 = document.getElementById('detail');
+      var timer = null;
+      oDiv2.onmouseenter = oDiv1.onmouseenter = function () {
+        clearTimeout(timer);
+        oDiv2.style.display = "block";
+      };
+      oDiv2.onmouseleave = oDiv1.onmouseleave = function () {
+        timer = setTimeout(function(){
+          oDiv2.style.display = "none";
+        }, 500);
+      };
+    </script>
+  </body>
+</html>

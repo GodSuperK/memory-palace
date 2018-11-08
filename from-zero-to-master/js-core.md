@@ -175,5 +175,6 @@ arr.plice(1,2, 'f','e');
 8. [case_8.html](js-src/case_8.html) - 间隔定时器使用
 9. [case_9.html](js-src/case_9.html) - 延时定时器使用
 9. [case_10.html](js-src/case_10.html) - 数码时钟 
+9. [case_11.html](js-src/case_11.html) - 延时提示框
 
 
