@@ -163,6 +163,72 @@ arr.plice(1,2, 'f','e');
   var iDay = oDate.getDay(); //返回星期
   ```
 
+## JS运动 知识暂停
+
+## JS DOM
+1. 节点=标签=元素
+2. 获取节点(childNodes, children)
+  ```JavaScript
+<body>
+  <ul>
+    <li></li>
+    <li></li>
+    <li></li>
+  </ul>
+  <script type="text/javascript">
+    var oUl = document.getElementsByTagName('ul')[0];
+    // 空白在 Chrome 下算作文本节点
+    // 4个空白(文本节点)+3个li(元素节点) = 7个节点
+    var oLi = oUl.childNodes;
+    // nodeType == 3 -> 文本节点
+    // nodeType == 1 -> 元素节点
+    for (var i=0;i<oUl.childNodes.length;i++) {
+      alert(oLi[i].nodeType);
+    }
+    // children -> 返回元素节点数组
+    alert(oUl.children.length);
+    // 返回父节点对象
+    var oNode = oUl.parentNode;
+  </script>
+</body>
+  ```
+3. offsetParent - (返回元素的实际位置)子元素绝对定位父元素相对定位, 返回相对定位的父元素，没有则返回body
+4. 子节点
+  ```html
+<body>
+  <ul>
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+    <li>4</li>
+    <li>5</li>
+    <li>6</li>
+    <li>7</li>
+  </ul>
+  <script type="text/javascript">
+    var oUl = document.getElementsByTagName('ul')[0];
+    // 将第一个节点元素的背景颜色设置为蓝色
+    oUl.firstElementChild.style.background = "blue";
+    // 将第最后一个节点元素的背景颜色设置为蓝色
+    oUl.lastElementChild.style.background = "green";
+    // 将下一个兄弟节点 <li>4</li>设置样式
+    oUl.children[4].nextElementSibling.style.background = "red";
+    // 将上一个兄弟节点 <li>6</li> 设置样式
+    oUl.children[4].previousElementSibling.style.background = "yellow";
+  </script>
+</body>
+
+  ```
+5. 操作元素属性
+  - setAttribute(名称, 值)
+  - getAttribute(名称)
+  - removeAttribute(名称)
+
+## 空链接
+```JavaScript
+<a href="javascript:;">这是一个空链接</a>
+```
+
 ## JS 实例
 
 1. [case_1.html](js-src/case_1.html) - 鼠标提示框，鼠标悬浮在元素上，显示提示信息
@@ -174,7 +240,7 @@ arr.plice(1,2, 'f','e');
 7. [case_7.html](js-src/case_7.html) - 时间换算
 8. [case_8.html](js-src/case_8.html) - 间隔定时器使用
 9. [case_9.html](js-src/case_9.html) - 延时定时器使用
-9. [case_10.html](js-src/case_10.html) - 数码时钟 
-9. [case_11.html](js-src/case_11.html) - 延时提示框
-
-
+10. [case_10.html](js-src/case_10.html) - 数码时钟 
+11. [case_11.html](js-src/case_11.html) - 无缝滚动
+12. fd
+13. [case_13.html](js-src/case_11.html) - 点击链接，隐藏父元素
