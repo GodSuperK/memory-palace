@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>发布评论</title>
+  <style media="screen">
+    #comment_list {
+        width: 500px;
+        border: 1px solid red;
+      }
+      #comment_list ul li {
+        list-style: none;
+        width: 400px;
+        background: #ffeb3b;
+      }
+    </style>
+</head>
+
+<body>
+  <section id="comment">
+    <div id="add_comment">
+      <textarea name="name" rows="8" cols="50">请输入您的评论内容</textarea>
+      <input type="button" name="" value="评论">
+    </div>
+    <div id="comment_list">
+      <ul>
+
+      </ul>
+    </div>
+  </section>
+
+  <script type="text/javascript">
+    var oSection = document.getElementById('comment');
+    var oTextArea = oSection.getElementsByTagName('textarea')[0];
+    var oBtn = oSection.getElementsByTagName('input')[0];
+    var oUl = oSection.getElementsByTagName('ul')[0];
+    var aLi = oSection.getElementsByTagName('li');
+
+    oBtn.onclick = function() {
+      var sText = oTextArea.value;
+      var oLi = document.createElement('li');
+      oLi.innerText = sText;
+      // 如果存在评论，则将评论添加到最上面
+      if (aLi.length > 0) {
+        oUl.insertBefore(oLi, aLi[0]);
+      } else {
+        // 如果没有评论，则追加评论
+        oUl.appendChild(oLi);
+      }
+
+    };
+  </script>
+</body>
+
+</html>

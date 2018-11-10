@@ -224,6 +224,9 @@ arr.plice(1,2, 'f','e');
   - getAttribute(名称)
   - removeAttribute(名称)
 
+6. 创建,添加,删除节点
+![](js-src/images/node_operate.png)
+
 ## 空链接
 ```JavaScript
 <a href="javascript:;">这是一个空链接</a>
@@ -242,5 +245,8 @@ arr.plice(1,2, 'f','e');
 9. [case_9.html](js-src/case_9.html) - 延时定时器使用
 10. [case_10.html](js-src/case_10.html) - 数码时钟 
 11. [case_11.html](js-src/case_11.html) - 无缝滚动
-12. fd
-13. [case_13.html](js-src/case_11.html) - 点击链接，隐藏父元素
+12. TODO
+13. [case_13.html](js-src/case_13.html) - 点击链接，隐藏父元素
+14. [case_14.html](js-src/case_14.html) - 发布评论, 使用到创建节点，追加节点，以及插入节点
+15. [case_15.html](js-src/case_15.html) - 删除评论, 使用到删除节点
+
