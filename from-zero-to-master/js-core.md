@@ -227,6 +227,14 @@ arr.plice(1,2, 'f','e');
 6. 创建,添加,删除节点
 ![](js-src/images/node_operate.png)
 
+## 表格应用
+![](pics/js-pics/table_1.png)
+![](pics/js-pics/table_2.png)
+
+## 表单应用
+![](pics/js-pics/form_1.png)
+![](pics/js-pics/form_2.png)
+
 ## 空链接
 ```JavaScript
 <a href="javascript:;">这是一个空链接</a>
@@ -249,4 +257,5 @@ arr.plice(1,2, 'f','e');
 13. [case_13.html](js-src/case_13.html) - 点击链接，隐藏父元素
 14. [case_14.html](js-src/case_14.html) - 发布评论, 使用到创建节点，追加节点，以及插入节点
 15. [case_15.html](js-src/case_15.html) - 删除评论, 使用到删除节点
+16. [case_16.html](js-src/case_16.html) - 表格应用, 隔行变色, 高亮当前行，增加行，删除行，动态序号分配
 

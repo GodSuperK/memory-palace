@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <style media="screen">
+    table {
+        width: 500px;
+      }
+
+      div {
+        float: left;
+      }
+      #input_info {
+        width: 300px;
+        height: 150px;
+        border: 1px solid blue;
+      }
+    </style>
+</head>
+
+<body>
+  <!--
+      1. 隔行变色
+      2. 高亮当前行
+      3. 添加行
+      4. 删除行
+      5. 动态分配序号， 序号不重用
+
+    -->
+
+  <div id="input_info">
+    <p><input id="text1_account" type="text" name="" value="" placeholder="请输入账号"></p>
+    <p><input id="text2_password" type="text" name="" value="" placeholder="请输入密码"></p>
+    <p><input id="text3_category" type="text" name="" value="" placeholder="请输入游戏类别"></p>
+    <p><input id="add_btn" type="button" name="" value="添加"> </p>
+  </div>
+
+  <div id="my_table">
+    <table border="1px">
+      <thead>
+        <td>序号</td>
+        <td>账号</td>
+        <td>密码</td>
+        <td>游戏类别</td>
+        <td>操作</td>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>1234567890</td>
+          <td>12345678</td>
+          <td>城堡争霸</td>
+          <td><a href="javascript:;">删除</a> </td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>1234567890</td>
+          <td>12345678</td>
+          <td>城堡争霸</td>
+          <td><a href="javascript:;">删除</a> </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script type="text/javascript">
+    var oTable = document.getElementsByTagName('table')[0];
+    var oTbody = oTable.getElementsByTagName('tbody')[0];
+    var aRows = oTbody.getElementsByTagName('tr');
+    var sOldColor;
+    var iRowsCount = aRows.length;
+
+    function changeBackground() {
+      // 1. 隔行(偶数行)变色
+      for (var i = 0; i < aRows.length; i++) {
+
+        aRows[i].onmouseenter = function() {
+          sOldColor = this.style.background;
+          this.style.background = "#FFC837";
+        };
+
+        aRows[i].onmouseleave = function() {
+          this.style.background = sOldColor;
+
+        };
+
+        if (i % 2 == 0) {
+          aRows[i].style.background = "#FF8008";
+        } else {
+          aRows[i].style.background = "";
+        }
+      }
+    }
+
+    changeBackground();
+
+
+    // 添加行
+    var oTextAccount = document.getElementById('text1_account');
+    var oTextPassword = document.getElementById('text2_password');
+    var oTextCategory = document.getElementById('text3_category');
+    var oAddButton = document.getElementById('add_btn');
+
+    oAddButton.onclick = function ()
+    {
+      var sAccount = oTextAccount.value;
+      var sPassword = oTextPassword.value;
+      var sCategory = oTextCategory.value;
+
+      // 创建 tr 元素
+      var oTr = document.createElement('tr');
+      // 创建 td 元素，同时填充内容
+      var oTd1 = document.createElement('td'); // 序号
+      var oTd2 = document.createElement('td'); // 账号
+      var oTd3 = document.createElement('td'); // 密码
+      var oTd4 = document.createElement('td'); // 类别
+      var oTd5 = document.createElement('td'); // 操作
+      // 动态分配序号，使用全局变量计数
+      iRowsCount++;
+      oTd1.innerText = iRowsCount;
+      oTd2.innerText = sAccount;
+      oTd3.innerText = sPassword;
+      oTd4.innerText = sCategory;
+      oTd5.innerHTML = "<a href='javascript:;'>删除</a>";
+      oTr.appendChild(oTd1);
+      oTr.appendChild(oTd2);
+      oTr.appendChild(oTd3);
+      oTr.appendChild(oTd4);
+      oTr.appendChild(oTd5);
+      oTbody.appendChild(oTr);
+
+      // 为新添加的行设置背景颜色
+      changeBackground();
+
+      // 为新添加的操作添加点击事件
+      var oNewALink = oTd5.getElementsByTagName('a')[0];
+      oNewALink.onclick = function ()
+      {
+        // 获取 tr 父节点, 并从 tbody 中删除
+        oTbody.removeChild(this.parentNode.parentNode);
+        changeBackground();
+      };
+    };
+
+    // 删除行
+    var aA = document.getElementsByTagName('a');
+
+    for (var i=0;i<aA.length;i++)
+    {
+      aA[i].onclick = function ()
+      {
+        // 获取 tr 父节点, 并从 tbody 中删除
+        oTbody.removeChild(this.parentNode.parentNode);
+        changeBackground();
+      };
+    }
+
+  </script>
+</body>
+
+</html>
