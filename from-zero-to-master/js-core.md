@@ -240,6 +240,100 @@ arr.plice(1,2, 'f','e');
 <a href="javascript:;">这是一个空链接</a>
 ```
 
+## 表单事件
+1. onsubmit - 提交表单时触发
+2. onreset - 重置表单时触发
+
+## 原生Ajax
+1. 创建Ajax 对象
+2. 连接到服务器
+3. 发送请求
+4. 接收返回值
+
+## Jquery Ajax
+1. `$.ajax()`
+  ```html
+  <!DOCTYPE html>
+<html lang="en">
+{% load staticfiles %}
+<head>
+    <meta charset="UTF-8">
+    <title>json+ajax</title>
+    <style>
+        input {
+            width: 50px;
+        }
+    </style>
+</head>
+<body>
+
+<section>
+    <input id="number_a" type="text">+
+    <input id="number_b" type="text">
+    <button>=</button>
+    <input id="result" type="text" name="result">
+</section>
+
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script>
+    /**
+     * 使用var声明的变量，其作用域为该语句所在的函数内，且存在变量提升现象；
+     * 使用let声明的变量，范围在 {} 内
+     * 使用const声明的是常量，在后面出现的代码中不能再修改该常量的值。
+     */
+    {#let jUser = {#}
+    {#    'name': 'KongDecheng',#}
+    {#    'age': 18,#}
+    {#    'school': '清华大学'#}
+
+    {#// 迭代 JSON 数据#}
+    {#for (let k in jUser) {#}
+    {#    console.log(k, jUser[k]);#}
+
+    {#// 序列化 JSON 数据 为字符串#}
+    {#let sUser = JSON.stringify(jUser);#}
+    {#console.log(sUser);#}
+    {#console.log(typeof sUser);#}
+    {##}
+    {#// 反序列化#}
+    {#let jUserCopy = JSON.parse(sUser);#}
+    {#console.log(typeof jUserCopy);#}
+</script>
+
+<script>
+    let oResult = document.getElementById('result');
+    let oBtn = document.getElementsByTagName('button')[0];
+    oBtn.onclick = function () {
+        let iA = document.getElementById('number_a').value;
+        let iB = document.getElementById('number_b').value;
+        $.ajax({
+            cache: false,
+            type: 'post',
+            async: true,
+            url: '{% url 'test_server:cal' %}',
+            data: {a: iA, b: iB},
+            beforeSend: function (xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+            },
+            success: function (data) {
+                if (data['status'] === "success") {
+                    oResult.value = data["result"];
+                } else {
+                    oResult.value = "未知结果";
+                }
+            },
+        });
+    };
+    
+</script>
+</body>
+</html>
+  ```
+2. `$.get()`
+3. `$.post()`
+
+ 
+
 ## JS 实例
 
 1. [case_1.html](js-src/case_1.html) - 鼠标提示框，鼠标悬浮在元素上，显示提示信息
@@ -258,4 +352,5 @@ arr.plice(1,2, 'f','e');
 14. [case_14.html](js-src/case_14.html) - 发布评论, 使用到创建节点，追加节点，以及插入节点
 15. [case_15.html](js-src/case_15.html) - 删除评论, 使用到删除节点
 16. [case_16.html](js-src/case_16.html) - 表格应用, 隔行变色, 高亮当前行，增加行，删除行，动态序号分配
+17. TODO - 表格搜索 P13
 
