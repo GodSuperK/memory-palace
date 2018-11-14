@@ -26,6 +26,7 @@
 ## core-tool-usage
 1. [Git&GitHub](core-tool-usage/git-github.md) - 如何使用Git和GitHub?
 2. [VIM](core-tool-usage/vim_config.md) - vim 的配置及使用
+3. [如何修改TXT文件的编码](core-tool-usage/code_conversion.md)
 ## software
 1. [安装Mysql](software/mysql_install.md) - How to install mysql 5.7 on Ubuntu 18.04?
 ## FQA
