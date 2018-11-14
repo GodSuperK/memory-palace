@@ -6,5 +6,6 @@
 `file --mime-encoding filename`
 
 ## 编码转换
-`iconv -f old_encoding -t new_encoding filename`
+`iconv -f old_encoding -t new_encoding filename` 将输出结果重定向到空文件中即可
+
 
